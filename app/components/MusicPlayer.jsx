@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward } from "react-icons/fa";
 import { ImSpinner8 } from "react-icons/im";
@@ -6,8 +7,8 @@ const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const audioRef = useRef(new Audio());
-  const abortControllerRef = useRef(new AbortController());
+  const audioRef = useRef(null);
+  const abortControllerRef = useRef(null);
   const isMounted = useRef(true);
 
   const songs = [
@@ -21,23 +22,30 @@ const MusicPlayer = () => {
   ];
 
   useEffect(() => {
+    // Initialize audio element only on client side
+    if (typeof window !== "undefined") {
+      audioRef.current = new Audio();
+      abortControllerRef.current = new AbortController();
+    }
+
     return () => {
       isMounted.current = false;
-      abortControllerRef.current.abort();
-      audioRef.current.pause();
-      audioRef.current.removeAttribute("src");
-      audioRef.current.load();
+      abortControllerRef.current?.abort();
+      audioRef.current?.pause();
+      audioRef.current?.removeAttribute("src");
     };
   }, []);
 
   const loadNewSong = useCallback(async () => {
+    if (!audioRef.current) return;
+
     try {
       setIsLoading(true);
-      abortControllerRef.current.abort();
+      abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
 
       const audio = audioRef.current;
-      audio.pause();
+      await audio.pause();
       audio.src = songs[currentSongIndex];
 
       await audio.load();
@@ -48,24 +56,24 @@ const MusicPlayer = () => {
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Error handling audio:", error);
-        if (isMounted.current) {
-          setIsPlaying(false);
-        }
+        isMounted.current && setIsPlaying(false);
       }
     } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
+      isMounted.current && setIsLoading(false);
     }
   }, [currentSongIndex, isPlaying, songs]);
 
   useEffect(() => {
-    loadNewSong();
+    if (audioRef.current) {
+      loadNewSong();
+    }
   }, [loadNewSong]);
 
   useEffect(() => {
     const audio = audioRef.current;
     const controller = abortControllerRef.current;
+
+    if (!audio || !controller) return;
 
     const handleEnded = () => playNext();
     audio.addEventListener("ended", handleEnded, { signal: controller.signal });
@@ -76,9 +84,11 @@ const MusicPlayer = () => {
   }, []);
 
   const togglePlayPause = async () => {
+    if (!audioRef.current) return;
+
     try {
       if (isPlaying) {
-        audioRef.current.pause();
+        await audioRef.current.pause();
         setIsPlaying(false);
       } else {
         await audioRef.current.play();

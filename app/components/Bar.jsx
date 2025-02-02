@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-const Bar = ({ Icon, level, name }) => {
+const Bar = ({ value: { Icon, level, name } }) => {
   const bar_width = `${level}%`;
   const variants = {
     initial: {

@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AnimatePresence } from "framer-motion";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,8 @@ export default function RootLayout({ children }) {
       <body
         className={`bg-fixed bg-gradient-to-r from-dark-500 to-dark-700 text-white ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {" "}
+        <AnimatePresence exitBeforeEnter>{children}</AnimatePresence>
       </body>
     </html>
   );

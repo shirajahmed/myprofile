@@ -156,10 +156,11 @@ export default function Home() {
             exit="exit"
           >
             <h6 className="my-3 text-base font-medium">
-              I am currently pursuing B.Tech Degree(Final Year) in Computer
-              Science Engineering from Academy of Technology. I have 3+ years of
-              experience in Web Development and I have a Youtube Channel where I
-              teach Full Stack Web Development
+              Highly motivated Frontend Developer with 2.6 years of experience
+              seeking to leverage strong technical skills in JavaScript,
+              Next.js, React, TypeScript, HTML, CSS, PHP, MYSQL and WordPress to
+              contribute to a challenging and growth-oriented software
+              engineering role #keep learning keep growing
             </h6>
             <div
               className="flex-grow p-4 mt-5 bg-dark-100 "
@@ -241,11 +242,15 @@ export default function Home() {
               >
                 <h5 className="my-3 text-2xl font-bold">Experience</h5>
                 <div className="">
-                  <h5 className="my-2 text-xl font-bold">
-                    Software Developer Jr.
-                  </h5>
-                  <p className="font-semibold">Tata Consultancy Services</p>
-                  <p className="my-3">I dont know why I am doing this job</p>
+                  <h4 className="my-2 text-xl font-bold">
+                    - Jr. Software Developer - April 2023 - Present
+                  </h4>
+                  <h4 className="my-2 text-xl font-bold">
+                    - Full Stack Developer - Jan 2022 - March 2023
+                  </h4>
+                  <h4 className="my-2 text-md font-bold">
+                    - BCA - 2018 - 2021
+                  </h4>
                 </div>
               </motion.div>
             </div>

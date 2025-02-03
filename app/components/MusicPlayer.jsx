@@ -1,4 +1,3 @@
-"use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward } from "react-icons/fa";
 import { ImSpinner8 } from "react-icons/im";

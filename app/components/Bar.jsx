@@ -18,7 +18,7 @@ const Bar = ({ value: { Icon, level, name } }) => {
   return (
     <div className="my-2 text-white bg-[#18191d] rounded-xl ">
       <motion.div
-        className="flex items-center px-4 py-1 rounded-xl bg-blue-500"
+        className="flex items-center px-4 py-1 rounded-xl bg-blue-500 text-sm"
         style={{
           width: bar_width,
         }}

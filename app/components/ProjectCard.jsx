@@ -76,12 +76,14 @@ const ProjectCard = ({
                 className="flex justify-center my-4 space-x-3"
                 variants={fadeInUp}
               >
-                <a
-                  href={github_url}
-                  className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-[#18191d]"
-                >
-                  <AiFillGithub /> <span>Github</span>
-                </a>
+                {github_url && (
+                  <a
+                    href={github_url}
+                    className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-[#18191d]"
+                  >
+                    <AiFillGithub /> <span>Github</span>
+                  </a>
+                )}
                 <a
                   href={deployed_url}
                   className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-[#18191d]"

@@ -127,3 +127,19 @@ export const projects = [
     key_techs: ["React", "Vite", "tailwindcss", "Framer Motion"],
   },
 ];
+export const toolsItem = [
+  {
+    name: "Password Generator",
+    description: "pass gen tools",
+    image_path: "/tools/passwordgenerator.png",
+    deployed_url: "/password-genertor",
+    category: ["utility"],
+  },
+  {
+    name: "Color Generator",
+    description: "color gen tools",
+    image_path: "/tools/colorgenerator.png",
+    deployed_url: "/color-generator",
+    category: ["utility"],
+  },
+];

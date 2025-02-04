@@ -23,11 +23,15 @@ import ServiceCard from "./components/ServiceCard";
 import ProjectsNavbar from "./components/ProjectsNavbar";
 import Bar from "./components/Bar";
 import ProjectCard from "./components/ProjectCard";
+import { MdEmail, MdPhone } from "react-icons/md";
+import { FaExternalLinkAlt } from "react-icons/fa";
+import Tools from "./components/Tools";
 
 export default function Home() {
   const [projects, setProjects] = useState(projectsData);
   const [active, setActive] = useState("all");
   const [navactive, setNavactive] = useState("About");
+  const [showTools, setShowTools] = useState(false);
 
   const handlerFilterCategory = (category) => {
     if (category === "all") {
@@ -90,20 +94,34 @@ export default function Home() {
           </div>
 
           {/* Contacts */}
-          <div
-            className="py-4 my-5 bg-[#18191d] rounded-xl text-white"
-            style={{ marginLeft: "-1rem", marginRight: "-1rem" }}
-          >
+          <div className="py-4 my-5 bg-[#18191d] rounded-xl text-white">
             <div className="flex items-center mb-2 justify-center">
               <GoLocation className="mr-2 " /> <span>Assam, India</span>
             </div>
-            <a target="_blank" href="mailto:shirajahmedlaskar@gmail.com">
-              shirajahmedlaskar@gmail.com
-            </a>
-            <p className="my-2">8254038057</p>
+            <div className="flex items-center text-[fff] justify-center gap-6">
+              <a
+                href="mailto:shirajahmedlaskar@gmail.com"
+                className="flex items-center gap-2 text-[fff] hover:underline"
+              >
+                <MdEmail size={20} />
+              </a>
+              <a
+                href="tel:8254038057"
+                className="flex items-center gap-2 text-[fff] hover:underline"
+              >
+                <MdPhone size={20} />
+              </a>
+            </div>
           </div>
 
           <MusicPlayer />
+
+          <div
+            onClick={() => setShowTools(true)}
+            className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white flex justify-center"
+          >
+            Tool <FaExternalLinkAlt size={14} className="ml-1" />
+          </div>
         </>
       </div>
       <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
@@ -215,6 +233,8 @@ export default function Home() {
                 <motion.div
                   variants={fadeInUp}
                   key={project.id}
+                  initial="initial"
+                  animate="animate"
                   className="col-span-12 p-2  rounded-lg sm:col-span-6 lg:col-span-4 bg-[#18191d]"
                 >
                   <ProjectCard project={project} />
@@ -280,6 +300,7 @@ export default function Home() {
           </motion.div>
         )}
       </div>
+      {showTools && <Tools setShowTools={setShowTools} />}
     </div>
   );
 }

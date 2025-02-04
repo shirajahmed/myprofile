@@ -1,38 +1,74 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward } from "react-icons/fa";
 import { ImSpinner8 } from "react-icons/im";
+
+const formatTime = (seconds) => {
+  if (!seconds || isNaN(seconds)) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+};
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   const audioRef = useRef(null);
+  const progressBarRef = useRef(null);
   const abortControllerRef = useRef(null);
   const isMounted = useRef(true);
+  const isPlayingRef = useRef(isPlaying);
 
-  const songs = [
-    "/music/music1.mp3",
-    "/music/music2.mp3",
-    "/music/music3.mp3",
-    "/music/music4.mp3",
-    "/music/music5.mp3",
-    "/music/music6.mp3",
-    "/music/music7.mp3",
-  ];
+  // Memoize songs array to prevent unnecessary reloads
+  const songs = useMemo(
+    () => [
+      "/music/music1.mp3",
+      "/music/music2.mp3",
+      "/music/music3.mp3",
+      "/music/music4.mp3",
+      "/music/music5.mp3",
+      "/music/music6.mp3",
+      "/music/music7.mp3",
+    ],
+    []
+  );
+
+  // Sync ref with isPlaying state
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   useEffect(() => {
-    // Initialize audio element only on client side
     if (typeof window !== "undefined") {
-      audioRef.current = new Audio();
+      const audio = new Audio();
+      audioRef.current = audio;
       abortControllerRef.current = new AbortController();
-    }
 
-    return () => {
-      isMounted.current = false;
-      abortControllerRef.current?.abort();
-      audioRef.current?.pause();
-      audioRef.current?.removeAttribute("src");
-    };
+      const updateTime = () => {
+        if (isMounted.current) setCurrentTime(audio.currentTime);
+      };
+
+      const updateDuration = () => {
+        if (isMounted.current) setDuration(audio.duration);
+      };
+
+      audio.addEventListener("timeupdate", updateTime);
+      audio.addEventListener("durationchange", updateDuration);
+      audio.addEventListener("ended", playNext);
+
+      return () => {
+        isMounted.current = false;
+        abortControllerRef.current?.abort();
+        audio.pause();
+        audio.removeAttribute("src");
+        audio.removeEventListener("timeupdate", updateTime);
+        audio.removeEventListener("durationchange", updateDuration);
+        audio.removeEventListener("ended", playNext);
+      };
+    }
   }, []);
 
   const loadNewSong = useCallback(async () => {
@@ -48,39 +84,26 @@ const MusicPlayer = () => {
       audio.src = songs[currentSongIndex];
 
       await audio.load();
+      setCurrentTime(0);
 
-      if (isMounted.current && isPlaying) {
+      // Use ref value instead of state to get current play status
+      if (isMounted.current && isPlayingRef.current) {
         await audio.play();
+        setIsPlaying(true);
       }
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Error handling audio:", error);
-        isMounted.current && setIsPlaying(false);
+        setIsPlaying(false);
       }
     } finally {
-      isMounted.current && setIsLoading(false);
+      setIsLoading(false);
     }
-  }, [currentSongIndex, isPlaying, songs]);
+  }, [currentSongIndex, songs]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      loadNewSong();
-    }
-  }, [loadNewSong]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    const controller = abortControllerRef.current;
-
-    if (!audio || !controller) return;
-
-    const handleEnded = () => playNext();
-    audio.addEventListener("ended", handleEnded, { signal: controller.signal });
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
+    loadNewSong();
+  }, [currentSongIndex]); // Only reload when song index changes
 
   const togglePlayPause = async () => {
     if (!audioRef.current) return;
@@ -88,15 +111,21 @@ const MusicPlayer = () => {
     try {
       if (isPlaying) {
         await audioRef.current.pause();
-        setIsPlaying(false);
       } else {
         await audioRef.current.play();
-        setIsPlaying(true);
       }
+      setIsPlaying(!isPlaying);
     } catch (error) {
       console.error("Error toggling playback:", error);
       setIsPlaying(false);
     }
+  };
+
+  const handleProgressClick = (e) => {
+    if (!audioRef.current || !duration) return;
+    const rect = progressBarRef.current.getBoundingClientRect();
+    const seekTime = ((e.clientX - rect.left) / rect.width) * duration;
+    audioRef.current.currentTime = seekTime;
   };
 
   const playNext = useCallback(() => {
@@ -109,6 +138,23 @@ const MusicPlayer = () => {
 
   return (
     <div className="py-2 bg-[#18191d] text-white rounded-lg">
+      <div className="px-4 mb-4">
+        <div
+          ref={progressBarRef}
+          className="h-1 bg-gray-700 rounded-full cursor-pointer"
+          onClick={handleProgressClick}
+        >
+          <div
+            className="h-1 bg-blue-500 rounded-full transition-all duration-500"
+            style={{ width: `${(currentTime / duration) * 100 || 0}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-xs mt-1 text-gray-400">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+
       <div className="flex justify-center mb-4 items-center">
         <button onClick={playPrev} className="text-xl mx-4 hover:text-gray-300">
           <FaStepBackward />
@@ -116,7 +162,7 @@ const MusicPlayer = () => {
 
         <button
           onClick={togglePlayPause}
-          className="text-xl mx-4 hover:text-gray-300 relative"
+          className="text-xl mx-4 hover:text-gray-300"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -134,8 +180,8 @@ const MusicPlayer = () => {
       </div>
 
       <div className="text-center text-sm min-h-[20px]">
-        {isPlaying && !isLoading && (
-          <p>{`Playing song ${currentSongIndex + 1}`}</p>
+        {!isLoading && (
+          <p>{`Track ${currentSongIndex + 1} of ${songs.length}`}</p>
         )}
         {isLoading && <p>Loading...</p>}
       </div>

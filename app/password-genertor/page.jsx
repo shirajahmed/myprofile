@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-export default function Home() {
+export default function PasswordGenerator() {
   const [password, setPassword] = useState("");
   const [length, setLength] = useState(12);
   const [options, setOptions] = useState({

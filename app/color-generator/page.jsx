@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function Home() {
+export default function ColorGenerator() {
   const [selectedColor, setSelectedColor] = useState("#3B82F6");
   const [opacity, setOpacity] = useState(100);
 

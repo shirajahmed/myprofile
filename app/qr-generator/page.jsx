@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 export default function PasswordGenerator() {
   const [text, setText] = useState("https://example.com");
@@ -8,8 +8,8 @@ export default function PasswordGenerator() {
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
   const [errorLevel, setErrorLevel] = useState("H");
-  const [logo, setLogo] = (useState < string) | (null > null);
-  const canvasRef = useRef < HTMLCanvasElement > null;
+  const [logo, setLogo] = useState(null);
+  const canvasRef = useRef(null);
 
   const generateQR = async () => {
     if (canvasRef.current) {

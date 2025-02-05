@@ -142,4 +142,11 @@ export const toolsItem = [
     deployed_url: "/color-generator",
     category: ["utility"],
   },
+  {
+    name: "QR Generator",
+    description: "color gen tools",
+    image_path: "/tools/qrgenerator.png",
+    deployed_url: "/qr-generator",
+    category: ["utility"],
+  },
 ];

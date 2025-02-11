@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Password Generator | Shiraj Ahmed",
+  title: "QR Generator | Shiraj Ahmed",
   description: "Best web Developer in silchar",
 };
 

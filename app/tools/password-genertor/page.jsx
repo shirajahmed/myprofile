@@ -48,12 +48,12 @@ export default function PasswordGenerator() {
       <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
         {/* //!navbar */}
         <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-green-500 text-white">
+          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
             Password Generator
           </span>
         </div>
 
-        <div className="max-h-[65vh] bg-[#0a0a0a] rounded-xl text-white p-8 flex items-center justify-center">
+        <div className="md:max-h-[65vh] bg-[#0a0a0a] rounded-xl text-white p-8 flex items-center justify-center">
           <div className="max-w-md w-full bg-[#18191d] p-6 rounded-lg shadow-xl">
             <h1 className="text-2xl font-bold mb-6 text-center">
               Password Generator
@@ -70,7 +70,7 @@ export default function PasswordGenerator() {
               />
               <button
                 onClick={copyToClipboard}
-                className="px-4 py-2 bg-green-500 hover:bg-blue-700 rounded transition-colors"
+                className="px-4 py-2 bg-[#a65fa8] hover:bg-[#a65fa8]/70 rounded transition-colors"
               >
                 Copy
               </button>
@@ -101,7 +101,7 @@ export default function PasswordGenerator() {
                       setOptions((prev) => ({ ...prev, [key]: !value }))
                     }
                     className={`w-12 h-6 rounded-full p-1 transition-colors ${
-                      value ? "bg-green-500" : "bg-gray-600"
+                      value ? "bg-[#a65fa8]" : "bg-gray-600"
                     }`}
                   >
                     <div
@@ -117,7 +117,7 @@ export default function PasswordGenerator() {
             {/* Generate Button */}
             <button
               onClick={generatePassword}
-              className="w-full py-3 bg-green-500 hover:bg-green-700 rounded transition-colors font-semibold"
+              className="w-full py-3 bg-[#a65fa8] hover:bg-[#a65fa8]/70 rounded transition-colors font-semibold"
             >
               Generate Password
             </button>

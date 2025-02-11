@@ -11,6 +11,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --themecolor: #a65fa8;
   }
 }
 
@@ -31,18 +32,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; /* Scrollbar color */
+  background: #a65fa8; /* Scrollbar color */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Scrollbar color on hover */
+  background: #a65fa8; /* Scrollbar color on hover */
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: #a65fa893 #f1f1f1;
 }
 
 .stopscroll {

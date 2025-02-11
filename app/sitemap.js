@@ -6,5 +6,29 @@ export default function sitemap() {
       changeFrequency: "yearly",
       priority: 1,
     },
+    {
+      url: "https://shirajahmed.com/tools",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://shirajahmed.com/tools/color-generator",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: "https://shirajahmed.com/tools/password-genertor",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+    {
+      url: "https://shirajahmed.com/tools/qr-generator",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
   ];
 }

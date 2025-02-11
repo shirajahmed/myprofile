@@ -7,8 +7,6 @@ import {
 import { GiTie } from "react-icons/gi";
 import { GoLocation } from "react-icons/go";
 import Image from "next/image";
-
-import Link from "next/link";
 import { useState } from "react";
 import {
   languages,
@@ -55,19 +53,19 @@ export default function Home() {
         <>
           <Image
             src="/shirajahmed.jpg"
-            alt="avatar"
+            alt="web developer in silchar"
             className="mx-auto border rounded-xl"
             height={90}
             width={118}
             quality={90}
           />
           <h3 className="my-4 text-3xl font-medium tracking-wider text-white">
-            <span className="text-green-500">Shiraj</span> Ahmed
+            <span className="text-[#a65fa8]">Shiraj</span> Ahmed
           </h3>
           <p className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white">
             Web Developer
           </p>
-          {/* Resume */}
+
           <a
             href="/shirajahmed.pdf"
             download="Shiraj Ahmed Laskar.pdf"
@@ -77,7 +75,6 @@ export default function Home() {
             <span>Download Resume</span>
           </a>
 
-          {/* Socials */}
           <div className="flex justify-around w-9/12 mx-auto my-5 md:w-full">
             <a
               target="_blank"
@@ -127,7 +124,7 @@ export default function Home() {
       <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
         {/* //!navbar */}
         <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-green-500 text-white">
+          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
             {navactive}
           </span>
 
@@ -174,11 +171,11 @@ export default function Home() {
             exit="exit"
           >
             <h6 className="my-3 text-base font-medium">
-              Highly motivated Frontend Developer with 2.6 years of experience
-              seeking to leverage strong technical skills in JavaScript,
-              Next.js, React, TypeScript, HTML, CSS, PHP, MYSQL and WordPress to
-              contribute to a challenging and growth-oriented software
-              engineering role #keep learning keep growing
+              Highly motivated Web Developer Developer with 3+ years of
+              experience seeking to leverage strong technical skills in Frontend
+              as well as in Backend to contribute to a challenging and
+              growth-oriented software engineering role #keep learning keep
+              growing
             </h6>
             <div
               className="flex-grow p-4 mt-5 bg-dark-100 "

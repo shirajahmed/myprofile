@@ -145,7 +145,7 @@ const MusicPlayer = () => {
           onClick={handleProgressClick}
         >
           <div
-            className="h-1 bg-blue-500 rounded-full transition-all duration-500"
+            className="h-1 bg-[#a65fa8]/50 rounded-full transition-all duration-500"
             style={{ width: `${(currentTime / duration) * 100 || 0}%` }}
           />
         </div>

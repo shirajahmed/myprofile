@@ -1,8 +1,8 @@
 export const NavItem = ({ value, handlerFilterCategory, active }) => {
   console.log(active);
 
-  var className = "capitalize cursor-pointer hover:text-[#6bc16b]";
-  if (active === value) className += " text-[#6bc16b]";
+  var className = "capitalize cursor-pointer hover:text-[#a65fa8]";
+  if (active === value) className += " text-[#a65fa8]";
 
   return (
     <li className={className} onClick={() => handlerFilterCategory(value)}>

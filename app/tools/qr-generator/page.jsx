@@ -69,7 +69,11 @@ export default function PasswordGenerator() {
       try {
         const blob =
           ((await new Promise()) < Blob) |
-          (null > ((resolve) => canvasRef.current?.toBlob(resolve)));
+          (null >
+            ((resolve) => {
+              canvasRef.current?.toBlob(resolve);
+            }));
+
         if (blob) {
           await navigator.clipboard.write([
             new ClipboardItem({ "image/png": blob }),
@@ -78,6 +82,7 @@ export default function PasswordGenerator() {
         }
       } catch (err) {
         console.error("Failed to copy QR code:", err);
+        alert("Failed to copy QR code to clipboard");
       }
     }
   };
@@ -105,13 +110,13 @@ export default function PasswordGenerator() {
       <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
         {/* //!navbar */}
         <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-green-500 text-white">
-            Password Generator
+          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
+            Password Generatord
           </span>
         </div>
 
-        <div className="max-h-[65vh] bg-[#0a0a0a] rounded-xl text-white p-8 flex items-center justify-center">
-          <div className="max-w-md w-full bg-[#18191d] p-6 rounded-lg shadow-xl">
+        <div className="h-auto bg-[#0a0a0a]  rounded-xl text-white p-8 flex items-center justify-center">
+          <div className="max-w-md w-full  bg-[#18191d] p-6 rounded-lg shadow-xl">
             <h1 className="text-2xl font-bold mb-6 text-center">
               Password Generator
             </h1>
@@ -186,7 +191,7 @@ export default function PasswordGenerator() {
                   type="file"
                   accept="image/*"
                   onChange={handleLogoUpload}
-                  className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                  className="w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#a65fa8]/60 file:text-white hover:file:bg-blue-700"
                 />
               </div>
             </div>
@@ -200,13 +205,13 @@ export default function PasswordGenerator() {
               <div className="flex gap-4">
                 <button
                   onClick={downloadQR}
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+                  className="px-6 py-2 bg-[#a65fa8] hover:bg-[#a65fa8]/70 rounded transition-colors"
                 >
                   Download
                 </button>
                 <button
                   onClick={copyQR}
-                  className="px-6 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors"
+                  className="px-6 py-2 bg-[#a65fa8] hover:bg-[#a65fa8]/70 rounded transition-colors"
                 >
                   Copy
                 </button>

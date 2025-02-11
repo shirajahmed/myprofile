@@ -15,8 +15,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Web Developer | Shiraj Ahmed",
-  description: "Best web Developer in silchar",
+  title: "Web Developer | Shiraj Ahmed - Crafting Digital Experiences",
+  description:
+    "Professional web developer from Silchar, India specializing in building, deploying, and managing responsive websites and web applications.",
+  authors: [{ name: "Shiraj Ahmed", url: "https://shirajahmed.com" }],
+  keywords: [
+    "Web Developer",
+    "Silchar",
+    "Web Design",
+    "Web Application",
+    "Responsive Websites",
+    "Free Tools",
+  ],
+  openGraph: {
+    title: "Web Developer | Shiraj Ahmed",
+    description:
+      "Crafting digital experiences with design, development, and deployment services in Silchar, India.",
+    url: "https://shirajahmed.com",
+    siteName: "Shiraj Ahmed",
+    images: [
+      {
+        url: "/home.png",
+        width: 1200,
+        height: 630,
+        alt: "Shiraj Ahmed Portfolio",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@yourtwitterhandle",
+    title: "Web Developer | Shiraj Ahmed",
+    description:
+      "Expert web developer from Silchar, India offering comprehensive web design, development, and deployment services.",
+    images: ["/home.png"],
+  },
+  alternates: {
+    canonical: "https://shirajahmed.com",
+  },
 };
 
 export default function RootLayout({ children }) {

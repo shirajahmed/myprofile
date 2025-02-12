@@ -1,8 +1,17 @@
+import Head from "next/head";
+
 export const metadata = {
   title:
     "Free Password Generator – Secure & Random Passwords | Shiraj Ahmed Tools",
   description:
     "Generate free, secure, and random passwords instantly with our free password generator tool. Enhance your online security today.",
+  keywords: [
+    "Free tools",
+    "Password",
+    "Password Generator",
+    "Free Password Maker",
+    "Generate Password",
+  ],
   openGraph: {
     title: "Free Password Generator – Secure & Random Passwords",
     description:
@@ -32,6 +41,30 @@ export const metadata = {
   },
 };
 
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Password Generator",
+  url: "https://shirajahmed.com/tools/password-generator",
+  applicationCategory: "Utility",
+  operatingSystem: "ALL",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "INR",
+  },
+};
+
 export default function Layout({ children }) {
-  return <div>{children}</div>;
+  return (
+    <>
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        />
+      </Head>
+      <div>{children}</div>
+    </>
+  );
 }

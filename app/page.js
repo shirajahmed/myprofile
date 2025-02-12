@@ -52,7 +52,7 @@ export default function Home() {
         {/* //!sidebar */}
         <>
           <Image
-            src="/shirajahmed.jpg"
+            src="/shirajahmed.png"
             alt="web developer in silchar"
             className="mx-auto border rounded-xl"
             height={90}

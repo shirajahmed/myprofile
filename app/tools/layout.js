@@ -1,7 +1,15 @@
 export const metadata = {
-  title: "Utility Tools | Shiraj Ahmed",
+  title: "Utility Tools | Free tools",
   description:
     "Discover a suite of utility tools by Shiraj Ahmed. Explore free tools like a password generator, color picker, QR code generator, and more to enhance your workflow.",
+  keywords: [
+    "Free tools",
+    "Utility tools",
+    "Handy Tools",
+    "Qr code",
+    "color generator",
+    "password generator",
+  ],
   openGraph: {
     title: "Utility Tools by Shiraj Ahmed",
     description:
@@ -9,7 +17,7 @@ export const metadata = {
     url: "https://shirajahmed.com/tools",
     images: [
       {
-        url: "https://shirajahmed.com/og-image-tools.jpg", // Replace with your actual OG image URL for tools page
+        url: "https://shirajahmed.com/og-image-tools.jpg",
         width: 1200,
         height: 630,
         alt: "Utility Tools by Shiraj Ahmed",

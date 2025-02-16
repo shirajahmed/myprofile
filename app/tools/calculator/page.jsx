@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import CalculatorModal from "../../components/CalculatorModal";
 import {
   calculateAge,
@@ -87,74 +87,76 @@ export default function Calculators() {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 ">
-      <div className="h-full col-span-12 p-4 text-base text-center bg-dark-500 lg:col-span-3 rounded-2xl shadow-custom-dark ">
-        <>sidebar</>
-      </div>
-      <div className="flex flex-col col-span-12 overflow-hidden shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
-        <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
-            Calculators
-          </span>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 ">
+        <div className="h-full col-span-12 p-4 text-base text-center bg-dark-500 lg:col-span-3 rounded-2xl shadow-custom-dark ">
+          <>sidebar</>
         </div>
+        <div className="flex flex-col col-span-12 overflow-hidden shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
+          <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
+            <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
+              Calculators
+            </span>
+          </div>
 
-        <div className="h-auto bg-[#0a0a0a] rounded-xl text-white p-8 flex flex-col space-y-8">
-          {showExtraButton && (
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold border-b-2 border-[#a65fa8]">
-                Special Calculator for you
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() =>
-                    handleButtonClick(
-                      "Sahil Calculator",
-                      () => ({ result: " 🐰  ja beta kaaam daam kor" }),
-                      []
-                    )
-                  }
-                  className="px-4 py-2 bg-[#a65fa8] text-white rounded-lg whitespace-nowrap"
-                >
-                  Click me very softly
-                </button>
-              </div>
-            </div>
-          )}
-          {calculatorCategories.map((category, index) => (
-            <div key={index} className="space-y-4">
-              <h2 className="text-xl font-bold border-b-2 border-[#a65fa8]">
-                {category.heading}
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {category.calculators.map((calculator, idx) => (
+          <div className="h-auto bg-[#0a0a0a] rounded-xl text-white p-8 flex flex-col space-y-8">
+            {showExtraButton && (
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold border-b-2 border-[#a65fa8]">
+                  Special Calculator for you
+                </h2>
+                <div className="flex flex-wrap gap-2">
                   <button
-                    key={idx}
                     onClick={() =>
                       handleButtonClick(
-                        calculator.title,
-                        calculator.onSubmit,
-                        calculator.inputs
+                        "Sahil Calculator",
+                        () => ({ result: " 🐰  ja beta kaaam daam kor" }),
+                        []
                       )
                     }
                     className="px-4 py-2 bg-[#a65fa8] text-white rounded-lg whitespace-nowrap"
                   >
-                    {calculator.title}
+                    Click me very softly
                   </button>
-                ))}
+                </div>
               </div>
-            </div>
-          ))}
+            )}
+            {calculatorCategories.map((category, index) => (
+              <div key={index} className="space-y-4">
+                <h2 className="text-xl font-bold border-b-2 border-[#a65fa8]">
+                  {category.heading}
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {category.calculators.map((calculator, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() =>
+                        handleButtonClick(
+                          calculator.title,
+                          calculator.onSubmit,
+                          calculator.inputs
+                        )
+                      }
+                      className="px-4 py-2 bg-[#a65fa8] text-white rounded-lg whitespace-nowrap"
+                    >
+                      {calculator.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {isModalOpen && (
-        <CalculatorModal
-          title={modalTitle}
-          onClose={closeModal}
-          onSubmit={modalInfo.onSubmit}
-          inputs={modalInfo.inputs}
-        />
-      )}
-    </div>
+        {isModalOpen && (
+          <CalculatorModal
+            title={modalTitle}
+            onClose={closeModal}
+            onSubmit={modalInfo.onSubmit}
+            inputs={modalInfo.inputs}
+          />
+        )}
+      </div>
+    </Suspense>
   );
 }

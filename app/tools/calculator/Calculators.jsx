@@ -104,20 +104,20 @@ export default function Calculators() {
           {showExtraButton && (
             <div className="space-y-4">
               <h2 className="text-xl font-bold border-b-2 border-[#a65fa8]">
-                Extra Options
+                Special Calculator for you
               </h2>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() =>
                     handleButtonClick(
-                      "Extra Calculator",
-                      () => ({ result: "Extra feature" }),
+                      "Sahil Calculator",
+                      () => ({ result: " 🐰  ja beta kaaam daam kor" }),
                       []
                     )
                   }
                   className="px-4 py-2 bg-[#a65fa8] text-white rounded-lg whitespace-nowrap"
                 >
-                  Extra Button
+                  Click me very softly
                 </button>
               </div>
             </div>

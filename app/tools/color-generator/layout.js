@@ -15,7 +15,7 @@ export const metadata = {
     title: "Free Color Picker – Find Your Perfect Color",
     description:
       "Discover the perfect color palette for your project using our free interactive color picker.",
-    url: "https://shirajahmed.com/tools/color-picker",
+    url: "https://shirajahmed.com/tools/color-generator",
     images: [
       {
         url: "/tools/colorgenerator.jpg", // Replace with your tool-specific OG image
@@ -36,7 +36,7 @@ export const metadata = {
     image: "/tools/colorgenerator.jpg",
   },
   alternates: {
-    canonical: "https://shirajahmed.com/tools/color-picker",
+    canonical: "https://shirajahmed.com/tools/color-generator",
   },
 };
 

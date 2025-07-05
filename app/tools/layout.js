@@ -1,3 +1,5 @@
+import Head from "next/head";
+
 export const metadata = {
   title: "Utility Tools | Free tools",
   description:
@@ -40,5 +42,11 @@ export const metadata = {
 };
 
 export default function Layout({ children }) {
+  // <Head>
+  //   <script
+  //     async
+  //     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  //   ></script>
+  // </Head>;
   return <div>{children}</div>;
 }

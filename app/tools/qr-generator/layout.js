@@ -15,7 +15,7 @@ export const metadata = {
     title: "Free QR Code Generator – Create Custom QR Codes",
     description:
       "Quickly create free custom QR codes with our free online tool.",
-    url: "https://shirajahmed.com/tools/qr-code-generator",
+    url: "https://shirajahmed.com/tools/qr-generator",
     images: [
       {
         url: "/tools/qrgenerator.png",
@@ -36,7 +36,7 @@ export const metadata = {
     image: "/tools/qrgenerator.png",
   },
   alternates: {
-    canonical: "https://shirajahmed.com/tools/qr-code-generator",
+    canonical: "https://shirajahmed.com/tools/qr-generator",
   },
 };
 

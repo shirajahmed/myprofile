@@ -23,18 +23,7 @@ const MusicPlayer = () => {
   const isPlayingRef = useRef(isPlaying);
 
   // Memoize songs array to prevent unnecessary reloads
-  const songs = useMemo(
-    () => [
-      "/music/music1.mp3",
-      "/music/music2.mp3",
-      "/music/music3.mp3",
-      "/music/music4.mp3",
-      "/music/music5.mp3",
-      "/music/music6.mp3",
-      "/music/music7.mp3",
-    ],
-    []
-  );
+  const songs = useMemo(() => ["/music/music1.mp3"], []);
 
   // Sync ref with isPlaying state
   useEffect(() => {

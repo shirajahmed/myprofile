@@ -135,7 +135,7 @@ export const toolsItem = [
     name: "Password Generator",
     description: "pass gen tools",
     image_path: "/tools/passwordgenerator.png",
-    deployed_url: "/tools/password-genertor",
+    deployed_url: "/tools/password-generator",
     category: ["utility"],
   },
   {

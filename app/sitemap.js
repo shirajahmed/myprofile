@@ -3,7 +3,7 @@ export default function sitemap() {
     {
       url: "https://shirajahmed.com",
       lastModified: new Date(),
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       priority: 1,
     },
     {
@@ -21,13 +21,13 @@ export default function sitemap() {
     {
       url: "https://shirajahmed.com/tools/password-genertor",
       lastModified: new Date(),
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: "https://shirajahmed.com/tools/qr-generator",
       lastModified: new Date(),
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       priority: 0.8,
     },
   ];

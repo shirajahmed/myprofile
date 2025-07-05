@@ -1,5 +1,5 @@
 import { RiComputerLine } from "react-icons/ri";
-import { FaServer } from "react-icons/fa";
+import { FaServer, FaTools } from "react-icons/fa";
 import { AiOutlineAntDesign, AiOutlineApi } from "react-icons/ai";
 import { MdDeveloperMode } from "react-icons/md";
 
@@ -10,34 +10,37 @@ export const services = [
     Icon: RiComputerLine,
     title: "Frontend Development",
     about:
-      "I can build a beautiful and scalable SPA using <b> HTML</b>,<b>CSS</b>   and <b>React.js</b> ",
+      "Building modern, responsive, and user-friendly web interfaces focused on performance and scalability.",
   },
   {
     Icon: FaServer,
-    title: "Backend  Development",
+    title: "Backend Development",
     about:
-      "Handle database, server, api using <b>Express </b> & other popular frameworks",
+      "Managing server-side logic, databases, and integrations to ensure reliable and secure applications.",
   },
   {
     Icon: AiOutlineApi,
     title: "API Development",
-    about: "I can develop robust  REST API using <b>Node API</b> ",
+    about:
+      "Creating well-structured and efficient APIs for seamless communication between systems.",
   },
   {
     Icon: MdDeveloperMode,
-    title: "Competitive Coder",
+    title: "Problem Solving",
     about:
-      "A daily problem solver in <b>HackerRank</b>  and <b>Freecode Camp</b> ",
+      "Regularly solving real-world challenges to enhance logic, coding skills, and development efficiency.",
   },
   {
-    Icon: AiOutlineAntDesign,
-    title: "UI/UX designer",
-    about: "Stunning user interface designer",
+    Icon: FaTools,
+    title: "Support & Maintenance",
+    about:
+      "Providing ongoing technical support, issue resolution, and maintaining code and server environments.",
   },
   {
     Icon: RiComputerLine,
-    title: "Other",
-    about: "Can work on SEO, Social media marketing",
+    title: "Other Expertise",
+    about:
+      "Basic experience in SEO, performance optimization, and social media setup for web applications.",
   },
 ];
 

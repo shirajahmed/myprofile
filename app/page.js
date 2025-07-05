@@ -22,7 +22,7 @@ import ProjectsNavbar from "./components/ProjectsNavbar";
 import Bar from "./components/Bar";
 import ProjectCard from "./components/ProjectCard";
 import { MdEmail, MdPhone } from "react-icons/md";
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaTools } from "react-icons/fa";
 import Tools from "./components/Tools";
 
 export default function Home() {
@@ -65,15 +65,21 @@ export default function Home() {
           <p className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white">
             Web Developer
           </p>
+          <div
+            onClick={() => setShowTools(true)}
+            className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white flex justify-center  items-center cursor-pointer gap-2 bg-[#a65fa8]/50 transition-all duration-300"
+          >
+            <FaTools size={14} /> Tool <FaExternalLinkAlt size={14} />
+          </div>
 
-          <a
+          {/* <a
             href="/shirajahmed.pdf"
             download="Shiraj Ahmed Laskar.pdf"
             className="flex items-center justify-center px-2 py-1 my-2 bg-[#18191d] rounded-xl text-white cursor-pointer"
           >
             <GiTie className="w-6 h-6" />
             <span>Download Resume</span>
-          </a>
+          </a> */}
 
           <div className="flex justify-around w-9/12 mx-auto my-5 md:w-full">
             <a
@@ -112,13 +118,10 @@ export default function Home() {
           </div>
 
           <MusicPlayer />
-
-          <div
-            onClick={() => setShowTools(true)}
-            className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white flex justify-center"
-          >
-            Tool <FaExternalLinkAlt size={14} className="ml-1" />
-          </div>
+          <p className="text-sm mt-2 text-gray-400">
+            Made with ❤️ by Shiraj Ahmed © {new Date().getFullYear()} All rights
+            reserved.
+          </p>
         </>
       </div>
       <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
@@ -171,14 +174,15 @@ export default function Home() {
             exit="exit"
           >
             <h6 className="my-3 text-base font-medium">
-              Highly motivated Web Developer Developer with 3+ years of
-              experience seeking to leverage strong technical skills in Frontend
-              as well as in Backend to contribute to a challenging and
-              growth-oriented software engineering role #keep learning keep
-              growing
+              Highly motivated Web Developer with over 3 years of experience,
+              skilled in both frontend and backend development. Seeking to
+              contribute to a challenging, growth-focused engineering role by
+              leveraging strong problem-solving abilities and a passion for
+              building efficient, scalable web applications.{" "}
+              <i>#KeepLearning #KeepGrowing</i>
             </h6>
             <div
-              className="flex-grow p-4 mt-5 bg-dark-100 "
+              className="flex-grow p-4 mt-0 bg-dark-100 "
               style={{ marginLeft: "-1.5rem", marginRight: "-1.5rem" }}
             >
               <h4 className="my-3 text-xl font-semibold tracking-wide">
@@ -208,7 +212,7 @@ export default function Home() {
         {/* project */}
         {navactive === "Projects" && (
           <motion.div
-            className="trigerstop px-5 py-2 overflow-y-scroll "
+            className="trigerstop px-5 py-2 overflow-y-auto "
             style={{ height: "65vh" }}
             variants={routeFade}
             initial="hidden"
@@ -226,10 +230,10 @@ export default function Home() {
               animate="animate"
               className=" grid grid-cols-12 gap-4 my-3"
             >
-              {projects.map((project) => (
+              {projects.map((project, index) => (
                 <motion.div
                   variants={fadeInUp}
-                  key={project.id}
+                  key={index}
                   initial="initial"
                   animate="animate"
                   className="col-span-12 p-2  rounded-lg sm:col-span-6 lg:col-span-4 bg-[#18191d]"
@@ -259,15 +263,16 @@ export default function Home() {
               >
                 <h5 className="my-3 text-2xl font-bold">Experience</h5>
                 <div className="">
-                  <h4 className="my-2 text-xl font-bold">
-                    - Jr. Software Developer - April 2023 - Present
+                  <h4 className="my-2 text-md">
+                    - Web Developer - May 2025 - Present
                   </h4>
-                  <h4 className="my-2 text-xl font-bold">
-                    - Full Stack Developer - Jan 2022 - March 2023
+                  <h4 className="my-2 text-md">
+                    - Jr. Software Developer - 2023 - 2025
                   </h4>
-                  <h4 className="my-2 text-md font-bold">
-                    - BCA - 2018 - 2021
+                  <h4 className="my-2 text-md">
+                    - Full Stack Developer - 2022 - 2023
                   </h4>
+                  <h4 className="my-2 text-md">- BCA - 2018 - 2021</h4>
                 </div>
               </motion.div>
             </div>

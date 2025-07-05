@@ -3,6 +3,7 @@ import "./globals.css";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { FaHome } from "react-icons/fa";
+import FloatingChatbotButton from "./components/FloatingChatbotButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,6 +73,7 @@ export default function RootLayout({ children }) {
           </Link>
         </div>
         <AnimatePresence exitBeforeEnter>{children}</AnimatePresence>
+        <FloatingChatbotButton />
       </body>
     </html>
   );

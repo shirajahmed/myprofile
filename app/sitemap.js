@@ -1,101 +1,161 @@
 export default function sitemap() {
+  const baseUrl = 'https://shirajahmed.com';
+  const currentDate = new Date();
+  
   return [
+    // Main pages
     {
-      url: "https://shirajahmed.com",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
+      url: baseUrl,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 1.0,
     },
     {
-      url: "https://shirajahmed.com/tools",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    
+    // Blog posts for content SEO
+    {
+      url: `${baseUrl}/blog/nextjs-14-modern-web-apps`,
+      lastModified: new Date('2024-01-15'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/react-performance-optimization`,
+      lastModified: new Date('2024-01-10'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/essential-frontend-developer-tools`,
+      lastModified: new Date('2024-01-05'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog/javascript-es2024-features`,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    
+    // Individual Tools - High Priority
+    {
+      url: `${baseUrl}/tools/calculator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: "https://shirajahmed.com/tools/color-generator",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/password-generator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: "https://shirajahmed.com/tools/password-genertor",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/qr-generator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: "https://shirajahmed.com/tools/qr-generator",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/color-generator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: "https://shirajahmed.com/tools/get-your-info",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/download-tools`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
+    
     // Code Tools Category
     {
-      url: "https://shirajahmed.com/tools/code-tools",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: "https://shirajahmed.com/tools/code-tools/css-minifier",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/code-tools`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/code-tools/html-formatter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/code-tools/css-minifier`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/code-tools/js-formatter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/code-tools/html-formatter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/code-tools/syntax-highlighter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    // Text Tools
-    {
-      url: "https://shirajahmed.com/tools/text-diff",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/code-tools/js-formatter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/word-counter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/code-tools/syntax-highlighter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    
+    // Text & Content Tools
+    {
+      url: `${baseUrl}/tools/text-diff`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/lorem-generator",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/word-counter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/markdown-converter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/lorem-generator`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: "https://shirajahmed.com/tools/case-converter",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
+      url: `${baseUrl}/tools/markdown-converter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/case-converter`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    
+    // Utility Tools
+    {
+      url: `${baseUrl}/tools/can-i-use-this-username`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/get-your-info`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
   ];

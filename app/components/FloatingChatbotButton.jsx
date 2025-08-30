@@ -25,7 +25,7 @@ export default function FloatingChatbotButton() {
           >
             <motion.button
               onClick={toggleChatbot}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
+              className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               title="Open AI Chatbot"
@@ -48,8 +48,7 @@ export default function FloatingChatbotButton() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-              // onClick={toggleChatbot}
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
             />
 
             {/* Chatbot Modal Window */}
@@ -60,9 +59,9 @@ export default function FloatingChatbotButton() {
               className="fixed z-50 inset-4 md:inset-8 lg:inset-16 xl:left-1/4 xl:right-1/4 xl:top-16 xl:bottom-16"
               style={{ height: "90vh", maxHeight: "100vh", overflowY: "auto" }}
             >
-              <div className="w-full h-full bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-2xl shadow-2xl overflow-hidden relative">
+              <div className="w-full h-full bg-white rounded-2xl shadow-2xl overflow-hidden relative border border-gray-200">
                 {/* Header */}
-                <div className="absolute top-0 left-0 right-0 z-10 bg-black/20 backdrop-blur-sm py-2 px-4 flex items-center justify-between">
+                <div className="absolute top-0 left-0 right-0 z-10 bg-blue-500 py-3 px-4 flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <FaComments className="text-white text-2xl" />
                     <h2 className="text-white text-xl font-bold">
@@ -71,7 +70,7 @@ export default function FloatingChatbotButton() {
                   </div>
                   <button
                     onClick={toggleChatbot}
-                    className="text-white hover:text-gray-300 transition-colors p-2 rounded-full hover:bg-white/10"
+                    className="text-white hover:text-gray-200 transition-colors p-2 rounded-full hover:bg-blue-600"
                     title="Close Chatbot"
                   >
                     <FaTimes size={20} />
@@ -79,7 +78,7 @@ export default function FloatingChatbotButton() {
                 </div>
 
                 {/* Chatbot Content */}
-                <div className="pt-[40px]  h-full">
+                <div className="pt-[60px] h-full">
                   <div className="h-full">
                     <Chatbot />
                   </div>

@@ -1,43 +1,13 @@
 export const metadata = {
-  title: "Calculator App | Free tools",
-  description: "Discover calculator utility tools by Shiraj Ahmed. ",
-  keywords: [
-    "Free tools",
-    "Utility tools",
-    "Handy Tools",
-    "Qr code",
-    "color generator",
-    "password generator",
-  ],
-  openGraph: {
-    title: "Calculator Tools by Shiraj Ahmed",
-    description:
-      "Explore free, easy-to-use utility tools including a password generator, color picker, and QR code generator.",
-    url: "https://shirajahmed.com/tools/calculator",
-    images: [
-      {
-        url: "https://shirajahmed.com/og-image-tools.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Utility Tools by Shiraj Ahmed",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@yourtwitterhandle",
-    title: "Utility Tools by Shiraj Ahmed",
-    description:
-      "Explore free and interactive utility tools, including a password generator, color picker, and QR code generator.",
-    image: "https://shirajahmed.com/og-image-tools.jpg",
-  },
-  alternates: {
-    canonical: "https://shirajahmed.com/tools/calculator",
-  },
+  title: 'Advanced Calculator Suite - Health, Finance, Math & Utility Calculators',
+  description: 'Comprehensive collection of calculators including BMI, loan, tip, percentage, GPA, and productivity calculators. Free online tools for daily calculations.',
+  keywords: 'calculator, BMI calculator, loan calculator, tip calculator, percentage calculator, GPA calculator, age calculator, compound interest, productivity tools',
 };
 
 export default function Layout({ children }) {
-  return <div>{children}</div>;
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+      {children}
+    </div>
+  );
 }

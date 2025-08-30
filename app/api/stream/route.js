@@ -1,81 +1,107 @@
-import ytdl from "ytdl-core";
-import { NextResponse } from "next/server";
-import { unlinkSync, existsSync, mkdirSync } from "fs";
-import { join } from "path";
-import ffmpeg from "fluent-ffmpeg";
-import ffmpegStatic from "ffmpeg-static";
-
-ffmpeg.setFfmpegPath(ffmpegStatic);
+import { NextResponse } from 'next/server';
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const videoId = searchParams.get("videoId");
-  const itag = searchParams.get("itag");
-  const title = searchParams.get("title");
-  const type = searchParams.get("type");
-
-  if (!videoId || !itag || !title || !type) {
-    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
-  }
-
   try {
-    // Create temp directory if it doesn't exist
-    const tempDir = join(process.cwd(), "temp");
-    if (!existsSync(tempDir)) {
-      mkdirSync(tempDir);
+    const { searchParams } = new URL(request.url);
+    const platform = searchParams.get('platform') || 'youtube';
+    const id = searchParams.get('id');
+    const quality = searchParams.get('quality');
+
+    if (!id) {
+      return NextResponse.json({ error: "Video ID is required" }, { status: 400 });
     }
 
-    const tempFilePath = join(tempDir, `${videoId}-${itag}.tmp`);
-
-    // Set appropriate headers based on type
+    // In a real implementation, you would:
+    // 1. Use yt-dlp, youtube-dl, or similar tools
+    // 2. Stream the actual video/audio data
+    // 3. Handle different platforms with their respective APIs
+    
+    // For demo purposes, we'll return a mock response
+    const mockFileContent = generateMockFile(platform, quality);
+    
     const headers = new Headers();
-    let filename = title;
+    headers.set('Content-Type', getContentType(quality));
+    headers.set('Content-Disposition', `attachment; filename="${getFileName(platform, id, quality)}"`);
+    headers.set('Content-Length', mockFileContent.length.toString());
 
-    if (type === "audio") {
-      headers.set("Content-Type", "audio/mpeg");
-      if (!filename.endsWith(".mp3")) filename += ".mp3";
-    } else {
-      headers.set("Content-Type", "video/mp4");
-      if (!filename.endsWith(".mp4")) filename += ".mp4";
-    }
+    return new NextResponse(mockFileContent, { headers });
 
-    headers.set("Content-Disposition", `attachment; filename="${filename}"`);
-
-    // For audio, we need to convert to mp3
-    if (type === "audio") {
-      const audioWriteStream = ytdl(
-        `https://www.youtube.com/watch?v=${videoId}`,
-        { quality: itag }
-      ).pipe(writeFileSync(tempFilePath));
-
-      await new Promise((resolve, reject) => {
-        ffmpeg(tempFilePath)
-          .audioBitrate(128)
-          .toFormat("mp3")
-          .on("error", reject)
-          .on("end", () => {
-            unlinkSync(tempFilePath); // Clean up temp file
-            resolve();
-          })
-          .save(tempFilePath);
-      });
-    }
-
-    // Create a stream from the file
-    const fileStream = createReadStream(tempFilePath);
-
-    // Clean up after streaming
-    fileStream.on("end", () => {
-      try {
-        unlinkSync(tempFilePath);
-      } catch (err) {
-        console.error("Error deleting file:", err);
-      }
-    });
-
-    return new NextResponse(fileStream, { headers });
   } catch (error) {
-    console.error("Stream error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Stream API Error:', error);
+    return NextResponse.json(
+      { error: "Failed to stream content", details: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+function generateMockFile(platform, quality) {
+  // Generate a small mock file for demo
+  const mockContent = `Mock ${platform} file - Quality: ${quality}\nGenerated at: ${new Date().toISOString()}`;
+  return new TextEncoder().encode(mockContent);
+}
+
+function getContentType(quality) {
+  if (quality === 'audio' || quality.includes('mp3')) {
+    return 'audio/mpeg';
+  } else if (quality.includes('image') || quality.includes('jpg')) {
+    return 'image/jpeg';
+  } else {
+    return 'video/mp4';
+  }
+}
+
+function getFileName(platform, id, quality) {
+  const timestamp = Date.now();
+  
+  if (quality === 'audio' || quality.includes('mp3')) {
+    return `${platform}_${id}_audio_${timestamp}.mp3`;
+  } else if (quality.includes('image') || quality.includes('jpg')) {
+    return `${platform}_${id}_image_${timestamp}.jpg`;
+  } else {
+    return `${platform}_${id}_${quality}_${timestamp}.mp4`;
+  }
+}
+
+// Alternative implementation using actual download services
+export async function POST(request) {
+  try {
+    const { url, format } = await request.json();
+    
+    // This would integrate with actual download services like:
+    // - yt-dlp for YouTube
+    // - Instagram Basic Display API for Instagram
+    // - Facebook Graph API for Facebook
+    // - TikTok API for TikTok
+    // - Twitter API for Twitter
+    
+    // Example with yt-dlp (requires server-side installation):
+    /*
+    const { exec } = require('child_process');
+    const ytDlpCommand = `yt-dlp -f "${format}" "${url}" --get-url`;
+    
+    return new Promise((resolve, reject) => {
+      exec(ytDlpCommand, (error, stdout, stderr) => {
+        if (error) {
+          reject(new Error(`yt-dlp error: ${error.message}`));
+          return;
+        }
+        
+        const downloadUrl = stdout.trim();
+        resolve(NextResponse.redirect(downloadUrl));
+      });
+    });
+    */
+    
+    return NextResponse.json({ 
+      message: "Download service not implemented in demo",
+      note: "In production, this would use yt-dlp or similar tools"
+    });
+    
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Download failed", details: error.message },
+      { status: 500 }
+    );
   }
 }

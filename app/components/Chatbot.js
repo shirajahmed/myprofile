@@ -7,50 +7,87 @@ import {
   FaVolumeUp,
   FaVolumeMute,
   FaPaperPlane,
+  FaRobot,
+  FaUser,
 } from "react-icons/fa";
-import { searchAnswers } from "../utils/googleSheets";
-import {
-  initSpeechRecognition,
-  startListening,
-  stopListening,
-} from "../utils/speechRecognition";
-import { speakText, toggleSpeechEnabled } from "../utils/textToSpeech";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSpeechEnabled, setIsSpeechEnabled] = useState(true);
+  const [isSpeechEnabled, setIsSpeechEnabled] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
-  const [knowledgeBase, setKnowledgeBase] = useState([]);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [recognition, setRecognition] = useState(null);
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  // Enhanced knowledge base with better matching
+  const knowledgeBase = [
+    {
+      keywords: ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"],
+      answer: "Hello! 👋 I'm Shiraj's AI assistant. How can I help you today?"
+    },
+    {
+      keywords: ["name", "who are you", "what are you"],
+      answer: "I'm an AI chatbot created by Shiraj Ahmed. I'm here to help answer questions about web development, his projects, and general inquiries!"
+    },
+    {
+      keywords: ["shiraj", "creator", "developer", "who is shiraj", "about shiraj"],
+      answer: "Shiraj Ahmed is a talented frontend developer who specializes in React, Next.js, and modern web technologies. He built this portfolio website and chatbot!"
+    },
+    {
+      keywords: ["help", "what can you do", "capabilities", "features"],
+      answer: "I can help you with:\n• Information about Shiraj's projects\n• Web development questions\n• General conversation\n• Voice interaction (if supported)\n• Navigate through the website tools"
+    },
+    {
+      keywords: ["projects", "portfolio", "work", "tools"],
+      answer: "Shiraj has built several amazing tools including:\n• Password Generator\n• QR Code Generator\n• Color Generator\n• Calculator Suite\n• Social Media Downloader\n• And many more! Check out the Tools section."
+    },
+    {
+      keywords: ["react", "nextjs", "next.js", "javascript", "web development"],
+      answer: "Great question! React is a powerful JavaScript library for building user interfaces. Next.js is a React framework that adds features like server-side rendering and static generation. Shiraj uses these technologies extensively!"
+    },
+    {
+      keywords: ["contact", "email", "reach", "get in touch"],
+      answer: "You can reach Shiraj through his social media links on this website or check his contact information in the portfolio section!"
+    },
+    {
+      keywords: ["thank you", "thanks", "appreciate"],
+      answer: "You're very welcome! 😊 I'm happy to help. Is there anything else you'd like to know?"
+    },
+    {
+      keywords: ["bye", "goodbye", "see you", "farewell"],
+      answer: "Goodbye! 👋 Thanks for chatting with me. Feel free to come back anytime!"
+    },
+    {
+      keywords: ["how are you", "how do you feel", "what's up"],
+      answer: "I'm doing great, thank you for asking! 🤖 I'm always ready to help and chat. How are you doing today?"
+    },
+    {
+      keywords: ["weather", "time", "date"],
+      answer: "I don't have access to real-time data like weather or current time, but I can help you with web development questions and information about Shiraj's projects!"
+    },
+    {
+      keywords: ["ai", "artificial intelligence", "machine learning"],
+      answer: "AI is fascinating! While I'm a simple rule-based chatbot, AI encompasses machine learning, natural language processing, and much more. It's revolutionizing how we interact with technology!"
+    }
+  ];
+
   useEffect(() => {
-    // Initialize with welcome message (client-side only)
+    // Initialize with welcome message
     setMessages([
       {
         id: 1,
-        text: "Hello! I'm your voice chatbot. You can type or speak to me!",
+        text: "Hello! I'm Shiraj's AI assistant. You can type or speak to me! 🤖",
         sender: "bot",
         timestamp: new Date().toLocaleTimeString(),
       },
     ]);
 
     // Initialize speech recognition
-    const isSupported = initSpeechRecognition(
-      handleSpeechResult,
-      handleSpeechError
-    );
-    setSpeechSupported(isSupported);
-
-    // Load knowledge base from Google Sheets
-    loadKnowledgeBase();
-
-    setIsInitialized(true);
+    initializeSpeechRecognition();
   }, []);
 
   useEffect(() => {
@@ -58,65 +95,60 @@ export default function Chatbot() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const loadKnowledgeBase = async () => {
-    try {
-      const data = await searchAnswers();
-      setKnowledgeBase(data);
-    } catch (error) {
-      console.error("Error loading knowledge base:", error);
-      // Fallback data if Google Sheets fails
-      setKnowledgeBase([
-        {
-          question: "What is your name?",
-          answer: "I'm Shiraj's chatbot assistant!",
-        },
-        {
-          question: "Who is Shiraj?",
-          answer: "Shiraj is a frontend engineer who built this chatbot.",
-        },
-        {
-          question: "What can you do?",
-          answer:
-            "I can chat with you using text or voice, and I get my knowledge from Google Sheets!",
-        },
-        {
-          question: "How are you?",
-          answer:
-            "I'm doing great! Thanks for asking. How can I help you today?",
-        },
-      ]);
+  const initializeSpeechRecognition = () => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          setInputText(transcript);
+          setIsListening(false);
+          // Auto-send after a short delay
+          setTimeout(() => sendMessage(transcript), 500);
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        setRecognition(recognition);
+        setSpeechSupported(true);
+      } else {
+        setSpeechSupported(false);
+      }
     }
   };
 
-  const handleSpeechResult = (transcript) => {
-    console.log("🎤 Speech recognized:", transcript);
-    setInputText(transcript);
-    setIsListening(false);
-    // Auto-send the message
-    setTimeout(() => sendMessage(transcript), 500);
-  };
-
-  const handleSpeechError = (error) => {
-    console.error("Speech recognition error:", error);
-    setIsListening(false);
-  };
-
   const toggleListening = () => {
+    if (!recognition) return;
+
     if (isListening) {
-      stopListening();
+      recognition.stop();
       setIsListening(false);
     } else {
-      startListening();
+      recognition.start();
       setIsListening(true);
     }
   };
 
   const sendMessage = async (messageText = inputText) => {
-    if (!messageText.trim()) return;
+    const text = messageText.trim();
+    if (!text) return;
 
     const userMessage = {
       id: Date.now(),
-      text: messageText,
+      text: text,
       sender: "user",
       timestamp: new Date().toLocaleTimeString(),
     };
@@ -125,10 +157,10 @@ export default function Chatbot() {
     setInputText("");
     setIsLoading(true);
 
-    try {
-      // Search for answer in knowledge base
-      const response = await findBestAnswer(messageText);
-
+    // Simulate thinking time
+    setTimeout(() => {
+      const response = findBestAnswer(text);
+      
       const botMessage = {
         id: Date.now() + 1,
         text: response,
@@ -137,96 +169,55 @@ export default function Chatbot() {
       };
 
       setMessages((prev) => [...prev, botMessage]);
-
-      // Speak the response if speech is enabled
-      if (isSpeechEnabled) {
-        speakText(response);
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      const errorMessage = {
-        id: Date.now() + 1,
-        text: "Sorry, I'm having trouble processing your request. Please try again.",
-        sender: "bot",
-        timestamp: new Date().toLocaleTimeString(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
       setIsLoading(false);
-    }
+
+      // Speak the response if enabled
+      if (isSpeechEnabled && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(response);
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        speechSynthesis.speak(utterance);
+      }
+    }, 1000);
   };
 
-  const findBestAnswer = async (query) => {
-    console.log("🔍 Searching for:", query);
-    console.log("📚 Knowledge base:", knowledgeBase);
-
-    // Import Fuse.js dynamically
-    const Fuse = (await import("fuse.js")).default;
-
-    const fuse = new Fuse(knowledgeBase, {
-      keys: ["question"],
-      threshold: 0.6, // More lenient for voice input (0.0 = exact match, 1.0 = match anything)
-      includeScore: true,
-      minMatchCharLength: 2,
-      ignoreLocation: true,
-      findAllMatches: true,
-    });
-
-    const results = fuse.search(query);
-    console.log("🎯 Search results:", results);
-
-    if (results.length > 0) {
-      const bestMatch = results[0];
-      console.log("✅ Best match:", bestMatch);
-
-      // More lenient scoring - if we have any result, use it
-      if (bestMatch.score < 0.8) {
-        return bestMatch.item.answer;
-      }
-    }
-
-    // Try simple keyword matching as fallback
+  const findBestAnswer = (query) => {
     const queryLower = query.toLowerCase();
-    for (const item of knowledgeBase) {
-      const questionLower = item.question.toLowerCase();
-      if (
-        questionLower.includes(queryLower) ||
-        queryLower.includes(questionLower)
-      ) {
-        console.log("✅ Keyword match found:", item);
-        return item.answer;
+    
+    // Find the best matching knowledge base entry
+    let bestMatch = null;
+    let highestScore = 0;
+
+    for (const entry of knowledgeBase) {
+      let score = 0;
+      
+      // Check how many keywords match
+      for (const keyword of entry.keywords) {
+        if (queryLower.includes(keyword.toLowerCase())) {
+          score += keyword.length; // Longer keywords get higher scores
+        }
+      }
+      
+      if (score > highestScore) {
+        highestScore = score;
+        bestMatch = entry;
       }
     }
 
-    // Check for common words/phrases
-    const commonPhrases = [
-      {
-        phrases: ["hello", "hi", "hey"],
-        answer: "Hello! How can I help you today?",
-      },
-      {
-        phrases: ["thank you", "thanks"],
-        answer: "You're welcome! Is there anything else I can help you with?",
-      },
-      {
-        phrases: ["goodbye", "bye", "see you"],
-        answer: "Goodbye! Have a great day!",
-      },
-      {
-        phrases: ["help", "assist"],
-        answer:
-          "I'm here to help! You can ask me questions about Shiraj, web development, or anything in my knowledge base.",
-      },
+    // If we found a good match, return it
+    if (bestMatch && highestScore > 0) {
+      return bestMatch.answer;
+    }
+
+    // Fallback responses for unmatched queries
+    const fallbackResponses = [
+      "I'm not sure about that specific topic. Could you try asking about Shiraj's projects, web development, or something else I might know?",
+      "That's an interesting question! I'm still learning. You might want to ask about Shiraj's work, his tools, or web development topics.",
+      "I don't have information about that right now. Feel free to ask me about Shiraj's portfolio, his development projects, or general web development questions!",
+      "Hmm, I'm not familiar with that. Try asking me about the tools on this website, Shiraj's background, or web development topics!"
     ];
 
-    for (const phrase of commonPhrases) {
-      if (phrase.phrases.some((p) => queryLower.includes(p))) {
-        console.log("✅ Common phrase match:", phrase);
-        return phrase.answer;
-      }
-    }
-
-    return "I'm not sure about that. Can you try asking differently or check if your question is in my knowledge base?";
+    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
   };
 
   const handleKeyPress = (e) => {
@@ -237,82 +228,88 @@ export default function Chatbot() {
   };
 
   const toggleSpeech = () => {
-    const newState = !isSpeechEnabled;
-    setIsSpeechEnabled(newState);
-    toggleSpeechEnabled(newState);
+    setIsSpeechEnabled(!isSpeechEnabled);
   };
 
-  // Show loading state until initialized
-  if (!isInitialized) {
-    return (
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 max-w-4xl mx-auto">
-        <div className="flex justify-center items-center h-96">
-          <div className="text-white text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p>Initializing chatbot...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const clearChat = () => {
+    setMessages([
+      {
+        id: 1,
+        text: "Chat cleared! How can I help you? 🤖",
+        sender: "bot",
+        timestamp: new Date().toLocaleTimeString(),
+      },
+    ]);
+  };
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg p-6 h-full flex flex-col">
+    <div className="bg-white/95 backdrop-blur-sm p-6 h-full flex flex-col rounded-2xl border border-gray-200 shadow-sm">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-white">Chat</h2>
+        <div className="flex items-center gap-3">
+          <FaRobot className="text-2xl text-blue-500" />
+          <h2 className="text-2xl font-bold text-gray-800">AI Assistant</h2>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={toggleSpeech}
-            className={`p-3 rounded-full transition-all ${
+            className={`p-2 rounded-lg transition-all ${
               isSpeechEnabled
-                ? "bg-green-500 text-white hover:bg-green-600"
-                : "bg-gray-500 text-white hover:bg-gray-600"
+                ? "bg-green-100 text-green-600 hover:bg-green-200"
+                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
             }`}
-            title={
-              isSpeechEnabled ? "Disable voice output" : "Enable voice output"
-            }
+            title={isSpeechEnabled ? "Disable voice output" : "Enable voice output"}
           >
             {isSpeechEnabled ? <FaVolumeUp /> : <FaVolumeMute />}
+          </button>
+          <button
+            onClick={clearChat}
+            className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all"
+            title="Clear chat"
+          >
+            🗑️
           </button>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-white/5 rounded-xl">
+      <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
         {messages.map((message) => (
           <div
             key={message.id}
             className={`flex ${
               message.sender === "user" ? "justify-end" : "justify-start"
-            } message-animation`}
+            } animate-fadeIn`}
           >
             <div
-              className={`max-w-xs md:max-w-md px-4 py-2 rounded-2xl ${
+              className={`max-w-xs md:max-w-md px-4 py-3 rounded-2xl ${
                 message.sender === "user"
-                  ? "bg-blue-500 text-white"
-                  : "bg-white/20 text-white"
+                  ? "bg-blue-500 text-white shadow-sm"
+                  : "bg-white text-gray-800 shadow-sm border border-gray-200"
               }`}
             >
-              <p className="text-sm">{message.text}</p>
-              <p className="text-xs opacity-70 mt-1">{message.timestamp}</p>
+              <div className="flex items-start gap-2">
+                {message.sender === "bot" && <FaRobot className="text-blue-500 mt-1 flex-shrink-0" />}
+                {message.sender === "user" && <FaUser className="text-blue-200 mt-1 flex-shrink-0" />}
+                <div className="flex-1">
+                  <p className="text-sm whitespace-pre-line">{message.text}</p>
+                  <p className="text-xs opacity-70 mt-2">{message.timestamp}</p>
+                </div>
+              </div>
             </div>
           </div>
         ))}
 
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-white/20 text-white px-4 py-2 rounded-2xl">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: "0.1s" }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-white rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
+          <div className="flex justify-start animate-fadeIn">
+            <div className="bg-white text-gray-800 px-4 py-3 rounded-2xl shadow-sm border border-gray-200">
+              <div className="flex items-center gap-2">
+                <FaRobot className="text-blue-500" />
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                </div>
               </div>
             </div>
           </div>
@@ -322,7 +319,7 @@ export default function Chatbot() {
       </div>
 
       {/* Input */}
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <div className="flex-1 relative">
           <input
             ref={inputRef}
@@ -331,18 +328,20 @@ export default function Chatbot() {
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message or use voice..."
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={isLoading}
           />
         </div>
 
         {speechSupported && (
           <button
             onClick={toggleListening}
+            disabled={isLoading}
             className={`p-3 rounded-xl transition-all ${
               isListening
-                ? "bg-red-500 text-white recording-animation"
-                : "bg-white/10 text-white hover:bg-white/20"
-            }`}
+                ? "bg-red-500 text-white animate-pulse"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+            } disabled:opacity-50`}
             title={isListening ? "Stop listening" : "Start voice input"}
           >
             {isListening ? <FaMicrophoneSlash /> : <FaMicrophone />}
@@ -361,14 +360,12 @@ export default function Chatbot() {
 
       {/* Status */}
       <div className="mt-4 text-center">
-        <p className="text-white/60 text-sm">
+        <p className="text-gray-500 text-sm">
           {isListening
-            ? "🎤 Listening..."
+            ? "🎤 Listening... Speak now!"
             : !speechSupported
-            ? "⚠️ Speech not supported in this browser"
-            : knowledgeBase.length > 0
-            ? `💾 Knowledge base loaded (${knowledgeBase.length} entries)`
-            : "📡 Loading knowledge base..."}
+            ? "⚠️ Voice input not supported in this browser"
+            : "💬 Type a message or click the microphone to speak"}
         </p>
       </div>
     </div>

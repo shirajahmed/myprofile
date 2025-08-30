@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   
   // Performance optimizations
   compress: true,
@@ -33,10 +32,6 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin',
           },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
         ],
       },
     ];
@@ -64,39 +59,6 @@ const nextConfig = {
     GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
     NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY: process.env.GOOGLE_SHEETS_API_KEY,
     NEXT_PUBLIC_GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
-  },
-  
-  // Experimental features for better performance
-  experimental: {
-    optimizeCss: true,
-    scrollRestoration: true,
-  },
-  
-  // Webpack optimization
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-    
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
-    };
-    
-    return config;
   },
 };
 

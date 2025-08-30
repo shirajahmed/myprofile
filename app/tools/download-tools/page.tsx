@@ -160,7 +160,8 @@ export default function SocialMediaDownloader() {
                   alt="Thumbnail"
                   className="w-32 h-24 object-cover rounded-lg"
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/128x96?text=No+Image';
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/128x96?text=No+Image';
                   }}
                 />
                 <div className="flex-1">

@@ -24,6 +24,8 @@ import ProjectCard from "./components/ProjectCard";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { FaExternalLinkAlt, FaTools } from "react-icons/fa";
 import Tools from "./components/Tools";
+import Sidebar from "./components/Sidebar";
+import MainContent from "./components/MainContent";
 
 export default function Home() {
   const [projects, setProjects] = useState(projectsData);
@@ -47,261 +49,22 @@ export default function Home() {
 
   return (
     <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 ">
-      {/* // do this div style later (after putting the content) */}
-      <div className="h-full col-span-12 p-4 text-base text-center bg-dark-500 lg:col-span-3 rounded-2xl shadow-custom-dark ">
-        {/* //!sidebar */}
-        <>
-          <Image
-            src="/shirajahmed.png"
-            alt="web developer in silchar"
-            className="mx-auto border rounded-xl"
-            height={90}
-            width={118}
-            quality={90}
-          />
-          <h3 className="my-4 text-3xl font-medium tracking-wider text-white">
-            <span className="text-[#a65fa8]">Shiraj</span> Ahmed
-          </h3>
-          <p className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white">
-            Web Developer
-          </p>
-          <div
-            onClick={() => setShowTools(true)}
-            className="px-2 py-1 my-3 bg-[#18191d] rounded-xl text-white flex justify-center  items-center cursor-pointer gap-2 bg-[#a65fa8]/50 transition-all duration-300"
-          >
-            <FaTools size={14} /> Tool <FaExternalLinkAlt size={14} />
-          </div>
-
-          {/* <a
-            href="/shirajahmed.pdf"
-            download="Shiraj Ahmed Laskar.pdf"
-            className="flex items-center justify-center px-2 py-1 my-2 bg-[#18191d] rounded-xl text-white cursor-pointer"
-          >
-            <GiTie className="w-6 h-6" />
-            <span>Download Resume</span>
-          </a> */}
-
-          <div className="flex justify-around w-9/12 mx-auto my-5 md:w-full">
-            <a
-              target="_blank"
-              href="https://wa.me/8254038057?text=Hello%20there!%20I%20would%20like%20to%20know%20more%20about%20your%20services."
-            >
-              <AiOutlineWhatsApp className="w-8 text-green-500 h-8 cursor-pointer" />
-            </a>
-            <a target="_blank" href="https://www.linkedin.com/in/shirajahmed/">
-              <AiFillLinkedin className="w-8 text-[#4376b0]  h-8 cursor-pointer" />
-            </a>
-            <a target="_blank" href="https://github.com/shirajahmed">
-              <AiFillGithub className="w-8 h-8 cursor-pointer" />
-            </a>
-          </div>
-
-          {/* Contacts */}
-          <div className="py-4 my-5 bg-[#18191d] rounded-xl text-white">
-            <div className="flex items-center mb-2 justify-center">
-              <GoLocation className="mr-2 " /> <span>Assam, India</span>
-            </div>
-            <div className="flex items-center text-[fff] justify-center gap-6">
-              <a
-                href="mailto:shirajahmedlaskar@gmail.com"
-                className="flex items-center gap-2 text-[fff] hover:underline"
-              >
-                <MdEmail size={20} />
-              </a>
-              <a
-                href="tel:8254038057"
-                className="flex items-center gap-2 text-[fff] hover:underline"
-              >
-                <MdPhone size={20} />
-              </a>
-            </div>
-          </div>
-
-          <MusicPlayer />
-          <p className="text-sm mt-2 text-gray-400">
-            Made with ❤️ by Shiraj Ahmed © {new Date().getFullYear()} All rights
-            reserved.
-          </p>
-        </>
+      {/* Enhanced Sidebar */}
+      <div className="h-full col-span-12 lg:col-span-3">
+        <Sidebar setShowTools={setShowTools} />
       </div>
-      <div className="flex flex-col col-span-12 overflow-hidden  shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
-        {/* //!navbar */}
-        <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
-            {navactive}
-          </span>
 
-          <div className="text-base font-normal md:text-xl flex gap-4 cursor-pointer ">
-            {navactive !== "About" && (
-              <span
-                className="hover:text-gray-400"
-                onClick={() => {
-                  setNavactive("About");
-                }}
-              >
-                About
-              </span>
-            )}
-            {navactive !== "Resume" && (
-              <span
-                className="hover:text-gray-400"
-                onClick={() => {
-                  setNavactive("Resume");
-                }}
-              >
-                Resume
-              </span>
-            )}
-            {navactive !== "Projects" && (
-              <span
-                className="hover:text-gray-400"
-                onClick={() => {
-                  setNavactive("Projects");
-                }}
-              >
-                Projects
-              </span>
-            )}
-          </div>
-        </div>
-        {/* about */}
-        {navactive === "About" && (
-          <motion.div
-            className="flex flex-col flex-grow px-6 pt-1 "
-            variants={routeFade}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <h6 className="my-3 text-base font-medium">
-              Highly motivated Web Developer with over 3 years of experience,
-              skilled in both frontend and backend development. Seeking to
-              contribute to a challenging, growth-focused engineering role by
-              leveraging strong problem-solving abilities and a passion for
-              building efficient, scalable web applications.{" "}
-              <i>#KeepLearning #KeepGrowing</i>
-            </h6>
-            <div
-              className="flex-grow p-4 mt-0 bg-dark-100 "
-              style={{ marginLeft: "-1.5rem", marginRight: "-1.5rem" }}
-            >
-              <h4 className="my-3 text-xl font-semibold tracking-wide">
-                What I am doing
-              </h4>
-
-              <motion.div
-                className="grid gap-6 my-3 md:grid-cols-2"
-                variants={stagger}
-                animate="animate"
-                initial="initial"
-              >
-                {/* children's initial and animate property should be same as the parent during a stagger effect  */}
-                {services.map((service) => (
-                  <motion.div
-                    className="col-span-2 p-2 rounded-lg bg-[#18191d] md:col-span-1 "
-                    key={service.title}
-                    variants={fadeInUp}
-                  >
-                    <ServiceCard service={service} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-        {/* project */}
-        {navactive === "Projects" && (
-          <motion.div
-            className="trigerstop px-5 py-2 overflow-y-auto "
-            style={{ height: "65vh" }}
-            variants={routeFade}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <ProjectsNavbar
-              handlerFilterCategory={handlerFilterCategory}
-              active={active}
-            />
-
-            <motion.div
-              variants={stagger}
-              initial="initial"
-              animate="animate"
-              className=" grid grid-cols-12 gap-4 my-3"
-            >
-              {projects.map((project, index) => (
-                <motion.div
-                  variants={fadeInUp}
-                  key={index}
-                  initial="initial"
-                  animate="animate"
-                  className="col-span-12 p-2  rounded-lg sm:col-span-6 lg:col-span-4 bg-[#18191d]"
-                >
-                  <ProjectCard project={project} />
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* resume */}
-        {navactive === "Resume" && (
-          <motion.div
-            className="px-6 py-2"
-            variants={routeFade}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {/* //! Education & Experience */}
-            <div className="flex">
-              <motion.div
-                variants={fadeInUp}
-                initial="initial"
-                animate="animate"
-              >
-                <h5 className="my-3 text-2xl font-bold">Experience</h5>
-                <div className="">
-                  <h4 className="my-2 text-md">
-                    - Web Developer - May 2025 - Present
-                  </h4>
-                  <h4 className="my-2 text-md">
-                    - Jr. Software Developer - 2023 - 2025
-                  </h4>
-                  <h4 className="my-2 text-md">
-                    - Full Stack Developer - 2022 - 2023
-                  </h4>
-                  <h4 className="my-2 text-md">- BCA - 2018 - 2021</h4>
-                </div>
-              </motion.div>
-            </div>
-
-            {/*Languages & Tools */}
-            <div className="grid gap-9 md:grid-cols-2">
-              <div>
-                <h5 className="my-3 text-2xl font-bold">
-                  Language & Framework
-                </h5>
-                <div className="my-2">
-                  {languages.map((language, i) => (
-                    <Bar value={language} key={i} />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h5 className="my-3 text-2xl font-bold">Tools & Softwares</h5>
-                <div className="my-2">
-                  {tools.map((tool, i) => (
-                    <Bar value={tool} key={i} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+      {/* Enhanced Main Content */}
+      <div className="col-span-12 lg:col-span-9">
+        <MainContent
+          navactive={navactive}
+          setNavactive={setNavactive}
+          projects={projects}
+          handlerFilterCategory={handlerFilterCategory}
+          active={active}
+        />
       </div>
+
       {showTools && <Tools setShowTools={setShowTools} />}
     </div>
   );

@@ -152,4 +152,11 @@ export const toolsItem = [
     deployed_url: "/tools/qr-generator",
     category: ["utility"],
   },
+  {
+    name: "Get Your Info",
+    description: "Get your info tools",
+    image_path: "/tools/qrgenerator.png",
+    deployed_url: "/tools/qr-generator",
+    category: ["utility"],
+  },
 ];

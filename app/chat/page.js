@@ -11,6 +11,7 @@ export default function Chat() {
   const [connected, setConnected] = useState(false);
   const [joined, setJoined] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [polling, setPolling] = useState(null);
   const fileRef = useRef();
   const messagesEndRef = useRef();
 
@@ -81,45 +82,51 @@ export default function Chat() {
     localStorage.setItem('current-user-name', userName);
   };
 
-  const connectWs = (id) => {
-    const wsUrl = process.env.NODE_ENV === 'production' 
-      ? `wss://${window.location.host}/ws?chatId=${id}&userId=${userId}&userName=${userName}`
-      : `ws://localhost:3001?chatId=${id}&userId=${userId}&userName=${userName}`;
+  const connectWs = async (id) => {
+    setConnected(true);
     
-    const socket = new WebSocket(wsUrl);
+    // Join the chat
+    await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chatId: id,
+        userId,
+        userName,
+        message: { type: 'join' }
+      })
+    });
     
-    socket.onopen = () => {
-      setConnected(true);
-      console.log('Connected to WebSocket');
-    };
-    socket.onclose = () => {
-      setConnected(false);
-      setOnlineUsers([]);
-      console.log('Disconnected from WebSocket');
-    };
-    socket.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      console.log('Received message:', data);
-      
-      if (data.type === 'userList') {
-        console.log('Setting online users:', data.users);
+    // Start polling for messages
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/chat?chatId=${id}`);
+        const data = await response.json();
+        
+        setMessages(prev => {
+          const newMessages = data.messages.filter(msg => 
+            !prev.some(p => p.id === msg.id)
+          ).map(msg => ({ ...msg, uniqueId: `${msg.id}-${msg.userId}` }));
+          
+          if (newMessages.length > 0) {
+            const updated = [...prev, ...newMessages];
+            saveMessages(id, updated);
+            return updated;
+          }
+          return prev;
+        });
+        
         setOnlineUsers(data.users);
-        return;
+      } catch (error) {
+        console.error('Polling error:', error);
       }
-      
-      const messageWithKey = { ...data, uniqueId: `${data.id}-${data.userId}-${Date.now()}` };
-      setMessages(prev => {
-        const updated = [...prev, messageWithKey];
-        saveMessages(id, updated);
-        return updated;
-      });
-    };
+    }, 1000);
     
-    setWs(socket);
+    setPolling(interval);
   };
 
-  const sendMessage = () => {
-    if (!message.trim() || !ws) return;
+  const sendMessage = async () => {
+    if (!message.trim() || !connected) return;
     
     const msg = {
       id: `${Date.now()}-${Math.random()}`,
@@ -130,7 +137,17 @@ export default function Chat() {
       type: 'text'
     };
     
-    ws.send(JSON.stringify(msg));
+    await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chatId,
+        userId,
+        userName,
+        message: msg
+      })
+    });
+    
     setMessage('');
   };
 
@@ -140,14 +157,13 @@ export default function Chat() {
     const img = new Image();
     
     img.onload = () => {
-      // Resize to max 300px width
       const maxWidth = 300;
       const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
       canvas.width = img.width * ratio;
       canvas.height = img.height * ratio;
       
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      callback(canvas.toDataURL('image/jpeg', 0.7)); // 70% quality
+      callback(canvas.toDataURL('image/jpeg', 0.7));
     };
     
     const reader = new FileReader();
@@ -157,9 +173,9 @@ export default function Chat() {
 
   const sendImage = (e) => {
     const file = e.target.files[0];
-    if (!file || !ws) return;
+    if (!file || !connected) return;
     
-    compressImage(file, (compressedImage) => {
+    compressImage(file, async (compressedImage) => {
       const msg = {
         id: `${Date.now()}-${Math.random()}`,
         userId,
@@ -168,15 +184,42 @@ export default function Chat() {
         timestamp: new Date().toISOString(),
         type: 'image'
       };
-      ws.send(JSON.stringify(msg));
+      
+      await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chatId,
+          userId,
+          userName,
+          message: msg
+        })
+      });
     });
   };
 
-  const terminateChat = () => {
-    if (ws) ws.close();
+  const terminateChat = async () => {
+    if (polling) {
+      clearInterval(polling);
+      setPolling(null);
+    }
+    
+    // Leave the chat
+    await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chatId,
+        userId,
+        userName,
+        message: { type: 'leave' }
+      })
+    });
+    
     setMessages([]);
     setChatId('');
     setJoined(false);
+    setConnected(false);
     localStorage.removeItem(`chat-messages-${chatId}`);
     localStorage.removeItem('chat-expires');
     localStorage.removeItem('current-chat-id');

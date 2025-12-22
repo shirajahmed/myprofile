@@ -167,6 +167,13 @@ export default function Sidebar({ setShowTools }) {
           <span className="text-gray-600">
             © {new Date().getFullYear()} All rights reserved
           </span>
+          <br />
+          <a 
+            href="/privacy-policy" 
+            className="text-[#a65fa8] hover:text-purple-400 transition-colors underline"
+          >
+            Privacy Policy
+          </a>
         </p>
       </div>
     </div>

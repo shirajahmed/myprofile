@@ -27,6 +27,8 @@ import Tools from "./components/Tools";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
 
+import TopNavbar from "./components/TopNavbar";
+
 export default function Home() {
   const [projects, setProjects] = useState(projectsData);
   const [active, setActive] = useState("all");
@@ -48,24 +50,27 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 ">
-      {/* Enhanced Sidebar */}
-      <div className="h-full col-span-12 lg:col-span-3">
-        <Sidebar setShowTools={setShowTools} />
-      </div>
+    <>
+      <TopNavbar setShowTools={setShowTools} />
+      <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 mt-20">
+        {/* Enhanced Sidebar */}
+        <div className="h-full col-span-12 lg:col-span-3">
+          <Sidebar setShowTools={setShowTools} />
+        </div>
 
-      {/* Enhanced Main Content */}
-      <div className="col-span-12 lg:col-span-9">
-        <MainContent
-          navactive={navactive}
-          setNavactive={setNavactive}
-          projects={projects}
-          handlerFilterCategory={handlerFilterCategory}
-          active={active}
-        />
-      </div>
+        {/* Enhanced Main Content */}
+        <div className="col-span-12 lg:col-span-9">
+          <MainContent
+            navactive={navactive}
+            setNavactive={setNavactive}
+            projects={projects}
+            handlerFilterCategory={handlerFilterCategory}
+            active={active}
+          />
+        </div>
 
-      {showTools && <Tools setShowTools={setShowTools} />}
-    </div>
+        {showTools && <Tools setShowTools={setShowTools} />}
+      </div>
+    </>
   );
 }

@@ -181,18 +181,18 @@ const MusicPlayer = () => {
   const currentSong = songs[currentSongIndex];
 
   return (
-    <div className="bg-[#18191d] border border-gray-700 rounded-lg p-3 shadow-lg">
+    <div className="bg-gray-100 dark:bg-[#18191d] border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
       {/* Compact Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-[#a65fa8] rounded-full animate-pulse"></div>
-          <span className="text-white text-sm font-medium">
+          <span className="text-black dark:text-white text-sm font-medium">
             {currentSong.title}
           </span>
         </div>
         <button
           onClick={() => setShowInfo(!showInfo)}
-          className="text-gray-400 hover:text-[#a65fa8] transition-colors text-xs"
+          className="text-gray-500 dark:text-gray-400 hover:text-[#a65fa8] transition-colors text-xs"
           title="Why music?"
         >
           <FaInfoCircle />
@@ -201,7 +201,7 @@ const MusicPlayer = () => {
 
       {/* Collapsible Info */}
       {showInfo && (
-        <div className="mb-3 p-2 bg-gray-800 border border-gray-600 rounded text-xs text-gray-300">
+        <div className="mb-3 p-2 bg-gray-200 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-xs text-gray-600 dark:text-gray-300">
           <p>
             <strong className="text-[#a65fa8]">Why music?</strong> Creates a
             relaxing atmosphere, keeps you engaged, and shows attention to UX
@@ -214,7 +214,7 @@ const MusicPlayer = () => {
       <div className="mb-3">
         <div
           ref={progressBarRef}
-          className="h-1 bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 transition-colors"
+          className="h-1 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
           onClick={handleProgressClick}
         >
           <div
@@ -222,7 +222,7 @@ const MusicPlayer = () => {
             style={{ width: `${(currentTime / duration) * 100 || 0}%` }}
           />
         </div>
-        <div className="flex justify-between text-xs mt-1 text-gray-500">
+        <div className="flex justify-between text-xs mt-1 text-gray-500 dark:text-gray-500">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
@@ -234,7 +234,7 @@ const MusicPlayer = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={playPrev}
-            className="text-gray-400 hover:text-white transition-colors p-1"
+            className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors p-1"
             title="Previous"
           >
             <FaStepBackward size={12} />
@@ -257,7 +257,7 @@ const MusicPlayer = () => {
 
           <button
             onClick={playNext}
-            className="text-gray-400 hover:text-white transition-colors p-1"
+            className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors p-1"
             title="Next"
           >
             <FaStepForward size={12} />
@@ -268,7 +268,7 @@ const MusicPlayer = () => {
         <div className="flex items-center gap-2 flex-1 max-w-[100px] ml-4">
           <button
             onClick={toggleMute}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
             title={isMuted ? "Unmute" : "Mute"}
           >
             {isMuted ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
@@ -276,7 +276,7 @@ const MusicPlayer = () => {
 
           <div
             ref={volumeBarRef}
-            className="flex-1 h-1 bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 transition-colors"
+            className="flex-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full cursor-pointer hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors"
             onClick={handleVolumeChange}
           >
             <div

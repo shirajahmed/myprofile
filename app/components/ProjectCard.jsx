@@ -54,13 +54,13 @@ const ProjectCard = ({
       {showDetail && (
         <div>
           {/* Background Overlay with Blur */}
-          <div className="fixed top-0 left-0 w-full h-full bg-[#0a0b0e] bg-opacity-70 backdrop-blur-sm z-0"></div>
+          <div className="fixed top-0 left-0 w-full h-full bg-black/70 dark:bg-[#0a0b0e]/70 backdrop-blur-sm z-0"></div>
 
           {/* Modal content */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 grid w-full max-w-[800px] h-auto p-2 bg-[#0a0b0e] rounded-sm md:grid-cols-2 gap-x-12 text-white">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 grid w-full max-w-[800px] h-auto p-2 bg-white dark:bg-[#0a0b0e] rounded-sm md:grid-cols-2 gap-x-12 text-black dark:text-white">
             <motion.div variants={stagger} initial="initial" animate="animate">
               <motion.div
-                className="border-4 border-gray-100 "
+                className="border-4 border-gray-200 dark:border-gray-100 "
                 variants={fadeInUp}
               >
                 <Image
@@ -79,14 +79,14 @@ const ProjectCard = ({
                 {github_url && (
                   <a
                     href={github_url}
-                    className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-[#18191d]"
+                    className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-gray-200 dark:bg-[#18191d]"
                   >
                     <AiFillGithub /> <span>Github</span>
                   </a>
                 )}
                 <a
                   href={deployed_url}
-                  className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-[#18191d]"
+                  className="flex items-center rounded-xl px-4 py-2 space-x-3 text-lg bg-gray-200 dark:bg-[#18191d]"
                 >
                   <AiFillProject /> <span>Project</span>
                 </a>
@@ -114,7 +114,7 @@ const ProjectCard = ({
                 {key_techs.map((tech) => (
                   <span
                     key={tech}
-                    className="px-2 py-1 my-1 bg-[#18191d] rounded-xl"
+                    className="px-2 py-1 my-1 bg-gray-200 dark:bg-[#18191d] rounded-xl"
                   >
                     {tech}
                   </span>
@@ -124,7 +124,7 @@ const ProjectCard = ({
 
             <button
               onClick={() => setShowDetail(false)}
-              className="absolute p-1 bg-[#18191d] rounded-md top-3 right-3 focus:outline-none"
+              className="absolute p-1 bg-gray-200 dark:bg-[#18191d] rounded-md top-3 right-3 focus:outline-none"
             >
               <MdClose size={14} />
             </button>

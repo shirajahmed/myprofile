@@ -1,53 +1,17 @@
 "use client";
-import {
-  AiFillGithub,
-  AiFillLinkedin,
-  AiOutlineWhatsApp,
-} from "react-icons/ai";
-import { GiTie } from "react-icons/gi";
-import { GoLocation } from "react-icons/go";
-import Image from "next/image";
+
+
 import { useState } from "react";
-import {
-  languages,
-  projects as projectsData,
-  services,
-  tools,
-} from "./utils/data";
 import { motion } from "framer-motion";
-import { fadeInUp, routeFade, stagger } from "./utils/animation";
-import MusicPlayer from "./components/MusicPlayer";
-import ServiceCard from "./components/ServiceCard";
-import ProjectsNavbar from "./components/ProjectsNavbar";
-import Bar from "./components/Bar";
-import ProjectCard from "./components/ProjectCard";
-import { MdEmail, MdPhone } from "react-icons/md";
-import { FaExternalLinkAlt, FaTools } from "react-icons/fa";
-import Tools from "./components/Tools";
+import { routeFade } from "./utils/animation";
+
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
-
 import TopNavbar from "./components/TopNavbar";
+import Tools from "./components/Tools";
 
 export default function Home() {
-  const [projects, setProjects] = useState(projectsData);
-  const [active, setActive] = useState("all");
-  const [navactive, setNavactive] = useState("About");
   const [showTools, setShowTools] = useState(false);
-
-  const handlerFilterCategory = (category) => {
-    if (category === "all") {
-      setProjects(projectsData);
-      setActive(category);
-      return;
-    }
-
-    const newArray = projectsData.filter((project) =>
-      project.category.includes(category)
-    );
-    setProjects(newArray);
-    setActive(category);
-  };
 
   return (
     <>
@@ -58,15 +22,25 @@ export default function Home() {
           <Sidebar setShowTools={setShowTools} />
         </div>
 
-        {/* Enhanced Main Content */}
+        {/* Placeholder for Home Page Content */}
         <div className="col-span-12 lg:col-span-9">
-          <MainContent
-            navactive={navactive}
-            setNavactive={setNavactive}
-            projects={projects}
-            handlerFilterCategory={handlerFilterCategory}
-            active={active}
-          />
+          <MainContent>
+            <motion.div
+              className="p-6"
+              variants={routeFade}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+                Welcome to my Homepage!
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300">
+                This section is reserved for future engaging content. Stay
+                tuned!
+              </p>
+            </motion.div>
+          </MainContent>
         </div>
 
         {showTools && <Tools setShowTools={setShowTools} />}

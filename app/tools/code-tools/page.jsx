@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "Code Tools - Online Code Formatters, Minifiers & Highlighters",
+  description: "A collection of online code tools for developers, including CSS minifier, HTML formatter, JavaScript beautifier, and syntax highlighter. Streamline your coding workflow.",
+  keywords: "code tools, online code formatter, CSS minifier, HTML formatter, JavaScript beautifier, syntax highlighter, web development utilities",
+};
+
 import Link from 'next/link';
 
 const codeTools = [

@@ -55,7 +55,7 @@ export default function Sidebar({ setShowTools }) {
     <div className="h-full bg-white dark:bg-[#18191d] rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
       {/* Profile Section */}
       <div className="text-center mb-6">
-        <div className="relative mb-4">
+        <div className="relative mb-4 w-fit mx-auto">
           <Image
             src="/shirajahmed.png"
             alt="Shiraj Ahmed - Web Developer"
@@ -108,30 +108,26 @@ export default function Sidebar({ setShowTools }) {
         <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-3 uppercase tracking-wider">
           Contact
         </h4>
-        <div className="space-y-3">
+        <div className="flex justify-center gap-4"> {/* Changed to flex row */}
           {contactInfo.map((contact, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+              className="p-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors" // Adjusted styling for individual icon container
             >
-              <contact.icon
-                className="text-[#a65fa8] flex-shrink-0"
-                size={18}
-              />
               {contact.href ? (
                 <a
                   href={contact.href}
-                  className="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white text-sm transition-colors truncate"
-                  title={contact.text}
+                  className="block text-[#a65fa8] flex-shrink-0" // Changed to block to make icon clickable area larger
+                  title={contact.text} // Tooltip from title
                 >
-                  {contact.type === "email"
-                    ? "shirajahmed@gmail.com"
-                    : contact.text}
+                  <contact.icon size={20} /> {/* Increased icon size for better visibility */}
                 </a>
               ) : (
-                <span className="text-gray-600 dark:text-gray-300 text-sm">
-                  {contact.text}
-                </span>
+                <contact.icon
+                  className="text-[#a65fa8] flex-shrink-0"
+                  size={20} // Increased icon size
+                  title={contact.text} // Tooltip from title
+                />
               )}
             </div>
           ))}

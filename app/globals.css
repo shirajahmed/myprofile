@@ -29,7 +29,7 @@
 }
 
 .animate-pulse {
-  animation: pulse 1s infinite;
+  animation: pulse 2s infinite;
 }
 
 :root {

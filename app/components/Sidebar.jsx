@@ -25,7 +25,8 @@ export default function Sidebar({ setShowTools }) {
     {
       href: "https://github.com/shirajahmed",
       icon: AiFillGithub,
-      color: "text-gray-800 dark:text-gray-300 hover:text-black dark:hover:text-white",
+      color:
+        "text-gray-800 dark:text-gray-300 hover:text-black dark:hover:text-white",
       label: "GitHub",
     },
   ];
@@ -58,12 +59,12 @@ export default function Sidebar({ setShowTools }) {
           <Image
             src="/shirajahmed.png"
             alt="Shiraj Ahmed - Web Developer"
-            className="mx-auto rounded-2xl border-2 border-[#a65fa8]/30 shadow-lg"
+            className="mx-auto rounded-2xl border-2 border-[#a65fa8]/30 shadow-lg animate-pulse"
             height={120}
             width={120}
             quality={90}
           />
-          <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-[#18191d] animate-pulse"></div>
+          <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-[#a65fa8] rounded-full border-2 border-white dark:border-[#18191d]"></div>
         </div>
 
         <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
@@ -71,7 +72,7 @@ export default function Sidebar({ setShowTools }) {
         </h3>
 
         <div className="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-[#a65fa8]/20 border border-gray-300 dark:border-[#a65fa8]/30 rounded-full">
-          <div className="w-2 h-2 bg-gray-500 dark:bg-[#a65fa8] rounded-full mr-2 animate-pulse"></div>
+          <div className="w-2 h-2 bg-gray-500 dark:bg-[#a65fa8] rounded-full mr-2"></div>
           <span className="text-gray-700 dark:text-[#a65fa8] text-sm font-medium">
             Web Developer
           </span>
@@ -79,9 +80,7 @@ export default function Sidebar({ setShowTools }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3 mb-6">
-        
-      </div>
+      <div className="space-y-3 mb-6"></div>
 
       {/* Social Links */}
       <div className="mb-6">
@@ -130,7 +129,9 @@ export default function Sidebar({ setShowTools }) {
                     : contact.text}
                 </a>
               ) : (
-                <span className="text-gray-600 dark:text-gray-300 text-sm">{contact.text}</span>
+                <span className="text-gray-600 dark:text-gray-300 text-sm">
+                  {contact.text}
+                </span>
               )}
             </div>
           ))}
@@ -151,8 +152,8 @@ export default function Sidebar({ setShowTools }) {
             © {new Date().getFullYear()} All rights reserved
           </span>
           <br />
-          <a 
-            href="/privacy-policy" 
+          <a
+            href="/privacy-policy"
             className="text-[#a65fa8] hover:text-purple-400 transition-colors underline"
           >
             Privacy Policy

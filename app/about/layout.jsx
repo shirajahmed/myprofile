@@ -1,3 +1,5 @@
+import MainPageLayout from "../components/MainPageLayout";
+
 export const metadata = {
   title: "About Shiraj Ahmed - Frontend Developer & Full Stack Engineer",
   description:
@@ -7,6 +9,8 @@ export const metadata = {
 
 export default function AboutLayout({ children }) {
   return (
-    <>{children}</>
+    <MainPageLayout>
+      {children}
+    </MainPageLayout>
   );
 }

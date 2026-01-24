@@ -10,7 +10,7 @@ export default function TopNavbar({ setShowTools }) {
   const pathname = usePathname();
 
   const navItems = [
-    { name: "Home", href: "/" },
+    // { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Projects", href: "/projects" },
     { name: "Blog", href: "/blog" },
@@ -25,7 +25,7 @@ export default function TopNavbar({ setShowTools }) {
           className="flex items-center gap-2 text-gray-800 dark:text-white hover:text-[#a65fa8] dark:hover:text-[#a65fa8] text-lg font-bold"
         >
           <FaHome />
-          <span>Shiraj Ahmed</span> {/* Changed from "Home" to name/brand */}
+          <span>Stay tuned!</span> {/* Changed from "Home" to name/brand */}
         </Link>
 
         {/* Desktop Navigation */}
@@ -40,8 +40,8 @@ export default function TopNavbar({ setShowTools }) {
               {item.name}
             </Link>
           ))}
-          <button
-            onClick={() => setShowTools(true)}
+          <button // Reverted to button
+            onClick={() => setShowTools(true)} // Reverted onClick
             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#a65fa8] to-purple-600 rounded-lg text-white font-medium transition-all duration-300 hover:scale-105"
           >
             <FaTools />
@@ -79,7 +79,7 @@ export default function TopNavbar({ setShowTools }) {
                 {item.name}
               </Link>
             ))}
-            <button
+            <button // Reverted to button
               onClick={() => {
                 setShowTools(true);
                 setIsMobileMenuOpen(false); // Close menu on click

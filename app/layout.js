@@ -173,7 +173,7 @@ export default function RootLayout({ children }) {
                 "Portfolio website of Shiraj Ahmed featuring web development projects and online tools",
               author: {
                 "@type": "Person",
-                name: "Shiraj Ahmed",
+                "name": "Shiraj Ahmed",
               },
               potentialAction: {
                 "@type": "SearchAction",

@@ -1,6 +1,4 @@
 "use client";
-
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { routeFade } from "./utils/animation";
@@ -9,9 +7,33 @@ import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
 import TopNavbar from "./components/TopNavbar";
 import Tools from "./components/Tools";
+import ContactFormModal from "./components/ContactFormModal"; // New import
 
 export default function Home() {
   const [showTools, setShowTools] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false); // New state for contact form
+
+  const handleContactFormSubmit = async (formData) => {
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send message.');
+      }
+
+      // Success, modal will handle success message
+    } catch (error) {
+      console.error('Frontend form submission error:', error);
+      throw error; // Re-throw to be caught by the modal's catch block
+    }
+  };
 
   return (
     <>
@@ -19,7 +41,7 @@ export default function Home() {
       <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 mt-20">
         {/* Enhanced Sidebar */}
         <div className="h-full col-span-12 lg:col-span-3">
-          <Sidebar setShowTools={setShowTools} />
+          <Sidebar setShowTools={setShowTools} setShowContactForm={setShowContactForm} /> {/* Pass setShowContactForm */}
         </div>
 
         {/* Placeholder for Home Page Content */}
@@ -45,6 +67,12 @@ export default function Home() {
 
         {showTools && <Tools setShowTools={setShowTools} />}
       </div>
+      
+      <ContactFormModal // Conditionally render ContactFormModal
+        show={showContactForm}
+        onClose={() => setShowContactForm(false)}
+        onSubmit={handleContactFormSubmit}
+      />
     </>
   );
 }

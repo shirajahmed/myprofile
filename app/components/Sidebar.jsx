@@ -8,7 +8,7 @@ import { GoLocation } from "react-icons/go";
 import { MdEmail, MdPhone } from "react-icons/md";
 import MusicPlayer from "./MusicPlayer";
 
-export default function Sidebar({ setShowTools }) {
+export default function Sidebar({ setShowTools, setShowContactForm }) { // Added setShowContactForm prop
   const socialLinks = [
     {
       href: "https://wa.me/8254038057?text=Hello%20there!%20I%20would%20like%20to%20know%20more%20about%20your%20services.",
@@ -80,7 +80,14 @@ export default function Sidebar({ setShowTools }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-3 mb-6"></div>
+      <div className="space-y-3 mb-6">
+        <button
+          onClick={() => setShowContactForm(true)}
+          className="w-full py-3 px-4 bg-gradient-to-r from-[#a65fa8] to-purple-600 rounded-lg text-white font-semibold shadow-md hover:from-purple-600 hover:to-[#a65fa8] transition-all duration-300 transform hover:scale-105"
+        >
+          Build Something Crazy!
+        </button>
+      </div>
 
       {/* Social Links */}
       <div className="mb-6">

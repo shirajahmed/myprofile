@@ -1,3 +1,5 @@
+import MainPageLayout from "../components/MainPageLayout";
+
 export const metadata = {
   title: "Shiraj Ahmed's Projects - Web Development Portfolio",
   description:
@@ -7,6 +9,8 @@ export const metadata = {
 
 export default function ProjectsLayout({ children }) {
   return (
-    <>{children}</>
+    <MainPageLayout>
+      {children}
+    </MainPageLayout>
   );
 }

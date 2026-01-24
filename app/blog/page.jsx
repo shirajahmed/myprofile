@@ -1,9 +1,3 @@
-export const metadata = {
-  title: "Blog - Web Development Insights by Shiraj Ahmed",
-  description: "Read the latest articles on React, Next.js, JavaScript, web development best practices, and frontend engineering insights by Shiraj Ahmed.",
-  keywords: "web development blog, React tutorials, Next.js guides, JavaScript tips, frontend development, programming articles",
-};
-
 const blogPosts = [
   {
     id: 1,
@@ -42,96 +36,99 @@ const blogPosts = [
     slug: "javascript-es2024-features"
   }
 ];
+import ContentCard from "../components/ContentCard"; // New import
 
 export default function BlogPage() {
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <header className="mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Web Development Blog
-        </h1>
-        <p className="text-xl text-gray-600">
-          Insights, tutorials, and best practices in modern web development
-        </p>
-      </header>
+    <ContentCard> {/* Wrap content in ContentCard */}
+      <div className="max-w-4xl mx-auto p-6">
+        <header className="mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Web Development Blog
+          </h1>
+          <p className="text-xl text-gray-600">
+            Insights, tutorials, and best practices in modern web development
+          </p>
+        </header>
 
-      <div className="grid gap-8">
-        {blogPosts.map((post) => (
-          <article
-            key={post.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
-          >
-            <header className="mb-4">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
-                <a href={`/blog/${post.slug}`}>{post.title}</a>
-              </h2>
-              <div className="flex items-center text-sm text-gray-500 mb-3">
-                <time dateTime={post.date}>
-                  {new Date(post.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
-                <span className="mx-2">•</span>
-                <span>{post.readTime}</span>
-              </div>
-            </header>
-            
-            <p className="text-gray-700 mb-4 leading-relaxed">
-              {post.excerpt}
-            </p>
-            
-            <footer className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <a
-                href={`/blog/${post.slug}`}
-                className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-              >
-                Read more →
-              </a>
-            </footer>
-          </article>
-        ))}
-      </div>
+        <div className="grid gap-8">
+          {blogPosts.map((post) => (
+            <article
+              key={post.id}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+            >
+              <header className="mb-4">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                  <a href={`/blog/${post.slug}`}>{post.title}</a>
+                </h2>
+                <div className="flex items-center text-sm text-gray-500 mb-3">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                  <span className="mx-2">•</span>
+                  <span>{post.readTime}</span>
+                </div>
+              </header>
+              
+              <p className="text-gray-700 mb-4 leading-relaxed">
+                {post.excerpt}
+              </p>
+              
+              <footer className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href={`/blog/${post.slug}`}
+                  className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                >
+                  Read more →
+                </a>
+              </footer>
+            </article>
+          ))}
+        </div>
 
-      {/* SEO-friendly structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "name": "Shiraj Ahmed's Web Development Blog",
-            "description": "Web development insights, tutorials, and best practices",
-            "url": "https://shirajahmed.com/blog",
-            "author": {
-              "@type": "Person",
-              "name": "Shiraj Ahmed"
-            },
-            "blogPost": blogPosts.map(post => ({
-              "@type": "BlogPosting",
-              "headline": post.title,
-              "description": post.excerpt,
-              "datePublished": post.date,
+        {/* SEO-friendly structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Blog",
+              "name": "Shiraj Ahmed's Web Development Blog",
+              "description": "Web development insights, tutorials, and best practices",
+              "url": "https://shirajahmed.com/blog",
               "author": {
                 "@type": "Person",
                 "name": "Shiraj Ahmed"
               },
-              "url": `https://shirajahmed.com/blog/${post.slug}`
-            }))
-          })
-        }}
-      />
-    </div>
+              "blogPost": blogPosts.map(post => ({
+                "@type": "BlogPosting",
+                "headline": post.title,
+                "description": post.excerpt,
+                "datePublished": post.date,
+                "author": {
+                  "@type": "Person",
+                  "name": "Shiraj Ahmed"
+                },
+                "url": `https://shirajahmed.com/blog/${post.slug}`
+              }))
+            })
+          }}
+        />
+      </div>
+    </ContentCard>
   );
 }

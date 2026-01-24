@@ -64,7 +64,7 @@ export default function Sidebar({ setShowTools }) {
             width={120}
             quality={90}
           />
-          <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-[#a65fa8] rounded-full border-2 border-white dark:border-[#18191d]"></div>
+          <div className="absolute bottom-0 right-0 w-6 h-6 bg-[#a65fa8] rounded-full border-2 border-white dark:border-[#18191d]"></div>
         </div>
 
         <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">

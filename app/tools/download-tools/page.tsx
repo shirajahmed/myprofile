@@ -197,7 +197,7 @@ export default function SocialMediaDownloader() {
                     <p>👤 {downloadData.author}</p>
                     <p>⏱️ {downloadData.duration}</p>
                     <p>👁️ {downloadData.views}</p>
-                    <p>📱 {platforms[downloadData.platform].name}</p>
+                    <p>📱 {platforms[downloadData.platform as PlatformKey].name}</p>
                   </div>
                 </div>
               </div>

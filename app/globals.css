@@ -20,7 +20,8 @@
 
 /* Pulse animation for recording */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -45,14 +46,32 @@
   }
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  min-height: 100vh;
+  overflow-y: auto !important; /* Force scrolling */
 }
 
 /* WebKit browsers (Chrome, Safari) */
@@ -118,4 +137,58 @@ body {
 
 .recording-animation {
   animation: recordingPulse 1s infinite;
+}
+
+/* Content wrapper - ensures scroll works */
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  pointer-events: auto; /* Allow clicks and scroll */
+}
+
+/* Optional: If you have a main container */
+main,
+.container {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
+  background: transparent; /* Keep transparent to see background effect */
+}
+
+/* Ensure text is readable */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a,
+li {
+  color: #ffffff; /* White text for dark background */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* For cards/containers with content */
+.card,
+.content-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Links */
+a {
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #2980b9;
 }

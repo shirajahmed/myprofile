@@ -8,7 +8,8 @@ import { GoLocation } from "react-icons/go";
 import { MdEmail, MdPhone } from "react-icons/md";
 import MusicPlayer from "./MusicPlayer";
 
-export default function Sidebar({ setShowTools, setShowContactForm }) { // Added setShowContactForm prop
+export default function Sidebar({ setShowTools, setShowContactForm }) {
+  // Added setShowContactForm prop
   const socialLinks = [
     {
       href: "https://wa.me/8254038057?text=Hello%20there!%20I%20would%20like%20to%20know%20more%20about%20your%20services.",
@@ -52,7 +53,7 @@ export default function Sidebar({ setShowTools, setShowContactForm }) { // Added
   ];
 
   return (
-    <div className="h-full bg-white dark:bg-[#18191d] rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
+    <div className="h-full bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
       {/* Profile Section */}
       <div className="text-center mb-6">
         <div className="relative mb-4 w-fit mx-auto">
@@ -115,7 +116,9 @@ export default function Sidebar({ setShowTools, setShowContactForm }) { // Added
         <h4 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-3 uppercase tracking-wider">
           Contact
         </h4>
-        <div className="flex justify-center gap-4"> {/* Changed to flex row */}
+        <div className="flex justify-center gap-4">
+          {" "}
+          {/* Changed to flex row */}
           {contactInfo.map((contact, index) => (
             <div
               key={index}
@@ -127,7 +130,8 @@ export default function Sidebar({ setShowTools, setShowContactForm }) { // Added
                   className="block text-[#a65fa8] flex-shrink-0" // Changed to block to make icon clickable area larger
                   title={contact.text} // Tooltip from title
                 >
-                  <contact.icon size={20} /> {/* Increased icon size for better visibility */}
+                  <contact.icon size={20} />{" "}
+                  {/* Increased icon size for better visibility */}
                 </a>
               ) : (
                 <contact.icon

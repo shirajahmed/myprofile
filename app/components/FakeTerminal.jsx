@@ -35,13 +35,19 @@ const FakeTerminal = () => {
       transition={{ duration: 0.5, delay: 0.3 }}
       className="bg-gray-900 text-green-400 font-mono p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 mb-6 overflow-hidden"
     >
-      <h3 className="text-xl font-bold mb-3 text-white">Fake Terminal Simulator 💻</h3>
+      <h3 className="text-xl font-bold mb-3 text-white">
+        Terminal Simulator 💻
+      </h3>
       <div className="flex items-center mb-2">
         <span className="text-red-500 mr-2">➜</span>
         <span className="text-cyan-400 mr-2">~</span>
         <span className="text-green-400">$</span>
         <span className="ml-2">
-          <Typewriter text="whoami" delay={100} onTypingEnd={() => setShowWhoamiResult(true)} />
+          <Typewriter
+            text="whoami"
+            delay={100}
+            onTypingEnd={() => setShowWhoamiResult(true)}
+          />
         </span>
       </div>
       {showWhoamiResult && (
@@ -56,7 +62,11 @@ const FakeTerminal = () => {
         <span className="text-green-400">$</span>
         <span className="ml-2">
           {showWhoamiResult && (
-            <Typewriter text="skills" delay={100} onTypingEnd={() => setShowSkillsResult(true)} />
+            <Typewriter
+              text="skills"
+              delay={100}
+              onTypingEnd={() => setShowSkillsResult(true)}
+            />
           )}
         </span>
       </div>

@@ -1,60 +1,89 @@
 // app/components/MicroChallenge.jsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 
-const challenges = [
-  {
-    question: "What is [] + [] ?",
-    answer: "'' (an empty string)",
-    explanation:
-      "When the `+` operator is used with arrays, JavaScript attempts to convert them to primitive values. For arrays, this typically involves calling `toString()`. `[].toString()` results in an empty string `''`. So, `'' + ''` evaluates to `''`.",
-  },
-  {
-    question: "What is '5' - 3 ?",
-    answer: "2",
-    explanation:
-      "The `-` operator implicitly converts operands to numbers. '5' becomes the number 5, and 3 is already a number. So, 5 - 3 evaluates to 2.",
-  },
-  {
-    question: "What is '5' + 3 ?",
-    answer: "'53'",
-    explanation:
-      "When the `+` operator encounters a string and a number, it performs string concatenation. The number 3 is converted to the string '3', and then '5' and '3' are concatenated to form '53'.",
-  },
-  {
-    question: "What is typeof NaN ?",
-    answer: "'number'",
-    explanation:
-      "`NaN` stands for 'Not-a-Number', but paradoxically, its type is 'number'. It's a special kind of numeric value that represents an undefined or unrepresentable numerical value.",
-  },
-];
-
 const MicroChallenge = () => {
-  const [currentChallenge, setCurrentChallenge] = useState({});
+  const [currentChallenge, setCurrentChallenge] = useState(null);
   const [showAnswerModal, setShowAnswerModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const selectRandomChallenge = () => {
-    const today = new Date();
-    const day = today.getDate();
-    // Use date to ensure it changes daily, but also allow refresh for immediate change
-    setCurrentChallenge(challenges[day % challenges.length]);
-  };
-
-  useEffect(() => {
-    selectRandomChallenge();
+  const fetchChallenge = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/micro-challenges");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCurrentChallenge(data);
+    } catch (err) {
+      setError("Failed to load challenge. Please try again.");
+      console.error("Error fetching micro challenge:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchChallenge();
+  }, [fetchChallenge]);
+
   const handleRefresh = () => {
-    let newChallenge;
-    do {
-      const randomIndex = Math.floor(Math.random() * challenges.length);
-      newChallenge = challenges[randomIndex];
-    } while (newChallenge.question === currentChallenge.question && challenges.length > 1); // Ensure different challenge if possible
-    setCurrentChallenge(newChallenge);
     setShowAnswerModal(false); // Hide answer if open
+    fetchChallenge(); // Fetch a new challenge
   };
+
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 mb-6 relative flex items-center justify-center"
+        style={{ minHeight: "180px" }} // Ensure consistent height during loading
+      >
+        <p className="text-lg font-semibold">Loading challenge...</p>
+      </motion.div>
+    );
+  }
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 mb-6 relative flex flex-col items-center justify-center"
+        style={{ minHeight: "180px" }}
+      >
+        <p className="text-lg font-semibold mb-2">{error}</p>
+        <button
+          onClick={fetchChallenge}
+          className="px-4 py-2 bg-white text-orange-700 rounded-lg shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition-colors duration-200 text-sm"
+        >
+          Retry
+        </button>
+      </motion.div>
+    );
+  }
+
+  if (!currentChallenge) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 mb-6 relative flex items-center justify-center"
+        style={{ minHeight: "180px" }}
+      >
+        <p className="text-lg font-semibold">No challenge available.</p>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

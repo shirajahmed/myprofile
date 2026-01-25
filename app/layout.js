@@ -2,7 +2,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { GoogleTagManager } from "@next/third-parties/google";
-import FloatingChatbotButton from "./components/FloatingChatbotButton"; // New import
+import FloatingChatbotButton from "./components/FloatingChatbotButton";
+import GravityMouseEffect from "./components/GravityMouseEffect";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -174,7 +176,7 @@ export default function RootLayout({ children }) {
                 "Portfolio website of Shiraj Ahmed featuring web development projects and online tools",
               author: {
                 "@type": "Person",
-                "name": "Shiraj Ahmed",
+                name: "Shiraj Ahmed",
               },
               potentialAction: {
                 "@type": "SearchAction",
@@ -186,9 +188,12 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={`${inter.className} antialiased`}>
-        {children}
-        <FloatingChatbotButton /> {/* Render FloatingChatbotButton here */}
+      <body className={`${inter.className} antialiased relative`}>
+        <GravityMouseEffect />
+        <div className="content-wrapper">
+          Ī{children}
+          <FloatingChatbotButton /> {/* Render FloatingChatbotButton here */}
+        </div>
       </body>
     </html>
   );

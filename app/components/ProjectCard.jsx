@@ -39,18 +39,15 @@ const ProjectCard = ({
   return (
     <div>
       <Image
-        src={image_path}
-        alt={name}
+        src={image_path ? image_path : "/images/noimage.png"}
+        alt={name || "No image"}
         className="cursor-pointer"
         onClick={() => setShowDetail(true)}
         layout="responsive"
         height="150"
         width="300"
-        quality={10}
-      />
-
+      />{" "}
       <p className="my-2 text-center">{name}</p>
-
       {showDetail && (
         <div>
           {/* Background Overlay with Blur */}
@@ -64,8 +61,8 @@ const ProjectCard = ({
                 variants={fadeInUp}
               >
                 <Image
-                  src={image_path}
-                  alt={name}
+                  src={image_path ? image_path : "/images/noimage.png"}
+                  alt={name || "No image"}
                   className="overflow-hidden"
                   layout="responsive"
                   height="150"

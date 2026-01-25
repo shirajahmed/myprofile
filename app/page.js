@@ -64,9 +64,9 @@ export default function Home() {
               <DailyTechFact />
               <AIPromptOfTheDay />
               <DevQuizSection />
-              <FakeTerminal />
               <ComplimentGenerator />
               <MicroChallenge />
+              <FakeTerminal />
             </motion.div>
           </MainContent>
         </div>

@@ -1,10 +1,33 @@
 // app/components/FakeTerminal.jsx
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+const Typewriter = ({ text, delay, onTypingEnd }) => {
+  const [currentText, setCurrentText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setCurrentText((prevText) => prevText + text[currentIndex]);
+        setCurrentIndex((prevIndex) => prevIndex + 1);
+      }, delay);
+      return () => clearTimeout(timeout);
+    } else if (onTypingEnd) {
+      onTypingEnd();
+    }
+  }, [currentIndex, delay, text, onTypingEnd]);
+
+  return <span>{currentText}</span>;
+};
+
 const FakeTerminal = () => {
+  const [showWhoamiResult, setShowWhoamiResult] = useState(false);
+  const [showSkillsCommand, setShowSkillsCommand] = useState(false);
+  const [showSkillsResult, setShowSkillsResult] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,17 +40,31 @@ const FakeTerminal = () => {
         <span className="text-red-500 mr-2">➜</span>
         <span className="text-cyan-400 mr-2">~</span>
         <span className="text-green-400">$</span>
-        <span className="ml-2">whoami</span>
+        <span className="ml-2">
+          <Typewriter text="whoami" delay={100} onTypingEnd={() => setShowWhoamiResult(true)} />
+        </span>
       </div>
-      <p className="ml-8 text-white">Shiraj – Full Stack Dev 😎</p>
+      {showWhoamiResult && (
+        <p className="ml-8 text-white">
+          <Typewriter text="Shiraj – Full Stack Dev 😎" delay={50} />
+        </p>
+      )}
 
       <div className="flex items-center mb-2 mt-4">
         <span className="text-red-500 mr-2">➜</span>
         <span className="text-cyan-400 mr-2">~</span>
         <span className="text-green-400">$</span>
-        <span className="ml-2">skills</span>
+        <span className="ml-2">
+          {showWhoamiResult && (
+            <Typewriter text="skills" delay={100} onTypingEnd={() => setShowSkillsResult(true)} />
+          )}
+        </span>
       </div>
-      <p className="ml-8 text-white">React, Next, Node, AI</p>
+      {showSkillsResult && (
+        <p className="ml-8 text-white">
+          <Typewriter text="React, Next, Node, AI" delay={50} />
+        </p>
+      )}
     </motion.div>
   );
 };

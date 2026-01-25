@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 export const metadata = {
   title: "QR Code Generator - Create QR Codes Online",
   description:
@@ -25,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@yourtwitterhandle",
+    site: "@shirajahmed",
     title: "Free QR Code Generator – Create Custom QR Codes",
     description:
       "Easily generate free custom QR codes with our free tool, ideal for websites and digital content.",
@@ -41,24 +39,35 @@ const jsonLdData = {
   "@type": "WebApplication",
   name: "QR Code Generator",
   url: "https://shirajahmed.com/tools/qr-generator",
+  description:
+    "Free online tool to generate QR codes for various data types including URLs, text, Wi-Fi, and emails.",
   applicationCategory: "Utility",
-  operatingSystem: "ALL",
+  operatingSystem: "Web Browser",
   offers: {
     "@type": "Offer",
     price: "0",
-    priceCurrency: "INR",
+    priceCurrency: "USD",
   },
+  author: {
+    "@type": "Person",
+    name: "Shiraj Ahmed",
+  },
+  featureList: [
+    "QR Code Generation for URL",
+    "QR Code Generation for Text",
+    "QR Code Generation for Wi-Fi",
+    "QR Code Generation for Email",
+    "Customizable QR Code Colors and Size",
+  ],
 };
 
 export default function Layout({ children }) {
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+      />
       <div>{children}</div>
     </>
   );

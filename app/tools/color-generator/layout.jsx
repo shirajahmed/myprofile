@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 export const metadata = {
   title: "Color Generator & Palette - Create & Explore Colors Online",
   description:
@@ -25,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@yourtwitterhandle",
+    site: "@shirajahmed",
     title: "Free Color Picker – Find Your Perfect Color",
     description:
       "Select and explore colors effortlessly with our free interactive color picker tool.",
@@ -41,24 +39,35 @@ const jsonLdData = {
   "@type": "WebApplication",
   name: "Color Generator",
   url: "https://shirajahmed.com/tools/color-generator",
-  applicationCategory: "Utility",
-  operatingSystem: "ALL",
+  description:
+    "Free online tool to generate random colors, explore palettes, and convert between HEX, RGB, HSL formats for design and development.",
+  applicationCategory: "DesignApplication",
+  operatingSystem: "Web Browser",
   offers: {
     "@type": "Offer",
     price: "0",
-    priceCurrency: "INR",
+    priceCurrency: "USD",
   },
+  author: {
+    "@type": "Person",
+    name: "Shiraj Ahmed",
+  },
+  featureList: [
+    "Random Color Generation",
+    "Color Palette Exploration",
+    "HEX to RGB/HSL Converter",
+    "RGB to HEX/HSL Converter",
+    "HSL to HEX/RGB Converter",
+  ],
 };
 
 export default function Layout({ children }) {
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+      />
       <div>{children}</div>
     </>
   );

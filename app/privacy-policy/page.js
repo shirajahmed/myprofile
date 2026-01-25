@@ -1,11 +1,56 @@
 export const metadata = {
-  title: "Privacy Policy",
-  description: "Privacy Policy for Shiraj Ahmed's portfolio website and online tools",
+  title: "Privacy Policy - Shiraj Ahmed's Portfolio & Tools",
+  description: "Read the Privacy Policy for Shiraj Ahmed's portfolio website and online developer tools. Understand how your data is collected, used, and protected.",
+  keywords: "privacy policy, data protection, data collection, usage data, personal information, online tools privacy, Shiraj Ahmed privacy",
+  openGraph: {
+    title: "Privacy Policy - Shiraj Ahmed's Portfolio & Tools",
+    description:
+      "Understand our data handling practices. Privacy Policy for Shiraj Ahmed's portfolio and free online developer tools.",
+    url: "https://shirajahmed.com/privacy-policy",
+    images: [
+      {
+        url: "https://shirajahmed.com/og-image-privacy-policy.jpg", // Create a specific OG image for privacy policy
+        width: 1200,
+        height: 630,
+        alt: "Privacy Policy",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@shirajahmed",
+    title: "Privacy Policy - Shiraj Ahmed's Portfolio & Tools",
+    description:
+      "Your data privacy is important. Read the Privacy Policy for Shiraj Ahmed's website and online tools.",
+    image: "https://shirajahmed.com/og-image-privacy-policy.jpg", // Create a specific OG image for privacy policy
+    creator: "@shirajahmed",
+  },
+  alternates: {
+    canonical: "https://shirajahmed.com/privacy-policy",
+  },
+};
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Privacy Policy",
+  url: "https://shirajahmed.com/privacy-policy",
+  description: "Official Privacy Policy for Shiraj Ahmed's portfolio website and online tools, detailing data practices and user rights.",
+  publisher: {
+    "@type": "Person",
+    name: "Shiraj Ahmed",
+  },
 };
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-[#0f1011] text-gray-300">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+      />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="bg-[#18191d] rounded-2xl p-8 shadow-lg border border-gray-700">
           <h1 className="text-4xl font-bold text-white mb-2">

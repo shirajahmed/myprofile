@@ -1,162 +1,85 @@
+import { blogPosts } from "./utils/blogData";
+
 export default function sitemap() {
-  const baseUrl = 'https://shirajahmed.com';
+  const baseUrl = "https://shirajahmed.com";
   const currentDate = new Date();
-  
-  return [
-    // Main pages
+
+  const mainPages = [
     {
       url: baseUrl,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${baseUrl}/tools`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/blog`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    
-    // Blog posts for content SEO
-    {
-      url: `${baseUrl}/blog/nextjs-14-modern-web-apps`,
-      lastModified: new Date('2024-01-15'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/react-performance-optimization`,
-      lastModified: new Date('2024-01-10'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/essential-frontend-developer-tools`,
-      lastModified: new Date('2024-01-05'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog/javascript-es2024-features`,
-      lastModified: new Date('2024-01-01'),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    
-    // Individual Tools - High Priority
-    {
-      url: `${baseUrl}/tools/calculator`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/tools/password-generator`,
+      url: `${baseUrl}/about`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/tools/qr-generator`,
+      url: `${baseUrl}/projects`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/tools/color-generator`,
+      url: `${baseUrl}/privacy-policy`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: "monthly",
+      priority: 0.5,
     },
     {
-      url: `${baseUrl}/tools/download-tools`,
+      url: `${baseUrl}/chat`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    
-    // Code Tools Category
-    {
-      url: `${baseUrl}/tools/code-tools`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/code-tools/css-minifier`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/code-tools/html-formatter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/code-tools/js-formatter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/code-tools/syntax-highlighter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    
-    // Text & Content Tools
-    {
-      url: `${baseUrl}/tools/text-diff`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/word-counter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/lorem-generator`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/markdown-converter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/case-converter`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    
-    // Utility Tools
-    {
-      url: `${baseUrl}/tools/can-i-use-this-username`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/get-your-info`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
   ];
+
+  const blogPostEntries = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  const toolPages = [
+    `${baseUrl}/tools/calculator`,
+    `${baseUrl}/tools/password-generator`,
+    `${baseUrl}/tools/qr-generator`,
+    `${baseUrl}/tools/color-generator`,
+    `${baseUrl}/tools/download-tools`,
+    `${baseUrl}/tools/code-tools`,
+    `${baseUrl}/tools/code-tools/css-minifier`,
+    `${baseUrl}/tools/code-tools/html-formatter`,
+    `${baseUrl}/tools/code-tools/js-formatter`,
+    `${baseUrl}/tools/code-tools/syntax-highlighter`,
+    `${baseUrl}/tools/text-diff`,
+    `${baseUrl}/tools/word-counter`,
+    `${baseUrl}/tools/lorem-generator`,
+    `${baseUrl}/tools/markdown-converter`,
+    `${baseUrl}/tools/case-converter`,
+    `${baseUrl}/tools/can-i-use-this-username`,
+    `${baseUrl}/tools/get-your-info`,
+  ].map((url) => ({
+    url,
+    lastModified: currentDate,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...mainPages, ...blogPostEntries, ...toolPages];
 }

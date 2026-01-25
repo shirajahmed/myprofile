@@ -84,9 +84,7 @@ export const metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-    yahoo: "your-yahoo-verification-code",
+    yandex: "7beb7a6970791085",
   },
   category: "technology",
   classification: "Portfolio Website",

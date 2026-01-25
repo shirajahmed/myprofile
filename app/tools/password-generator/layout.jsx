@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 export const metadata = {
   title: "Password Generator - Create Strong, Secure Passwords Online",
   description:
@@ -25,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@yourtwitterhandle",
+    site: "@shirajahmed",
     title: "Free Password Generator – Secure & Random Passwords",
     description:
       "Use our free password generator to create strong, random passwords for enhanced security.",
@@ -42,23 +40,31 @@ const jsonLdData = {
   name: "Password Generator",
   url: "https://shirajahmed.com/tools/password-generator",
   applicationCategory: "Utility",
-  operatingSystem: "ALL",
+  operatingSystem: "Web Browser",
   offers: {
     "@type": "Offer",
     price: "0",
-    priceCurrency: "INR",
+    priceCurrency: "USD",
   },
+  author: {
+    "@type": "Person",
+    name: "Shiraj Ahmed",
+  },
+  featureList: [
+    "Strong Password Generation",
+    "Random Password Generation",
+    "Customizable Password Length",
+    "Include/Exclude Uppercase, Lowercase, Numbers, Symbols",
+  ],
 };
 
 export default function Layout({ children }) {
   return (
     <>
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+      />
       <div>{children}</div>
     </>
   );

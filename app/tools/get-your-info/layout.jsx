@@ -6,16 +6,16 @@ export const metadata = {
     "system info, browser info, device info, IP address, geolocation, user agent, screen resolution, online tools, utility",
 
   openGraph: {
-    title: "Utility Tools by Shiraj Ahmed",
+    title: "Get Your Info - Browser & System Information Tool",
     description:
-      "Explore free, easy-to-use utility tools including a password generator, color picker, and QR code generator.",
+      "Instantly retrieve detailed information about your browser, device, screen, network, and location with our free online tool.",
     url: "https://shirajahmed.com/tools/get-your-info",
     images: [
       {
-        url: "https://shirajahmed.com/og-image-tools.jpg",
+        url: "https://shirajahmed.com/tools/get-your-info-preview.jpg", // Create a specific OG image for this tool
         width: 1200,
         height: 630,
-        alt: "Utility Tools by Shiraj Ahmed",
+        alt: "Get Your Info Tool",
       },
     ],
     locale: "en_US",
@@ -23,17 +23,54 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@yourtwitterhandle",
-    title: "Utility Tools by Shiraj Ahmed",
+    site: "@shirajahmed",
+    title: "Get Your Info - Browser & System Information Tool",
     description:
-      "Explore free and interactive utility tools, including a password generator, color picker, and QR code generator.",
-    image: "https://shirajahmed.com/og-image-tools.jpg",
+      "Find out your device, browser, screen, network, and location info with our free online tool. Detailed system insights at your fingertips.",
+    image: "https://shirajahmed.com/tools/get-your-info-preview.jpg", // Create a specific OG image for this tool
+    creator: "@shirajahmed",
   },
   alternates: {
     canonical: "https://shirajahmed.com/tools/get-your-info",
   },
 };
 
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Get Your Info",
+  url: "https://shirajahmed.com/tools/get-your-info",
+  description:
+    "Free online tool to quickly retrieve and display detailed browser, system, device, network, and location information.",
+  applicationCategory: "Utility",
+  operatingSystem: "Web Browser",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  author: {
+    "@type": "Person",
+    name: "Shiraj Ahmed",
+  },
+  featureList: [
+    "Browser Information",
+    "Device Information",
+    "Screen Resolution",
+    "IP Address Lookup",
+    "Geolocation Data",
+    "User Agent String",
+  ],
+};
+
 export default function Layout({ children }) {
-  return <div>{children}</div>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+      />
+      <div>{children}</div>
+    </>
+  );
 }

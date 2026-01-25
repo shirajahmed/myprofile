@@ -10,6 +10,17 @@ export const metadata = {
       "15+ free tools for developers including generators, calculators, and utilities",
     images: ["/tools-preview.png"],
   },
+  alternates: {
+    canonical: `https://shirajahmed.com/tools`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Online Developer Tools by Shiraj Ahmed",
+    description:
+      "Explore Shiraj Ahmed's collection of 15+ free developer tools: generators, calculators, formatters, and more to boost your productivity.",
+    images: ["https://shirajahmed.com/tools-preview.png"],
+    creator: "@shirajahmed",
+  },
 };
 
 export default function ToolsLayout({ children }) {

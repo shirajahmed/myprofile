@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { GoogleTagManager } from "@next/third-parties/google";
+import FloatingChatbotButton from "./components/FloatingChatbotButton"; // New import
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -185,7 +186,10 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased`}>
+        {children}
+        <FloatingChatbotButton /> {/* Render FloatingChatbotButton here */}
+      </body>
     </html>
   );
 }

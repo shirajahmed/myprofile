@@ -1,9 +1,9 @@
 import MainPageLayout from "../components/MainPageLayout";
 
 export const metadata = {
-  title: "Blog - Web Development Insights by Shiraj Ahmed",
-  description: "Read the latest articles on React, Next.js, JavaScript, web development best practices, and frontend engineering insights by Shiraj Ahmed.",
-  keywords: "web development blog, React tutorials, Next.js guides, JavaScript tips, frontend development, programming articles",
+  title: "Ideas - Web Development Insights by Shiraj Ahmed",
+  description: "Explore the latest ideas and articles on React, Next.js, JavaScript, web development best practices, AI, and frontend engineering insights by Shiraj Ahmed.",
+  keywords: "web development ideas, React insights, Next.js concepts, JavaScript tips, frontend development, AI in web, programming articles",
 };
 
 export default function BlogLayout({ children }) {

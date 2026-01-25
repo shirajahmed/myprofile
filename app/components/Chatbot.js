@@ -19,63 +19,44 @@ export default function Chatbot() {
   const [isSpeechEnabled, setIsSpeechEnabled] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
   const [recognition, setRecognition] = useState(null);
+  const [dynamicKnowledgeBase, setDynamicKnowledgeBase] = useState([]);
+  const [isKnowledgeBaseLoading, setIsKnowledgeBaseLoading] = useState(true);
+  const [knowledgeBaseError, setKnowledgeBaseError] = useState(null);
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Enhanced knowledge base with better matching
-  const knowledgeBase = [
-    {
-      keywords: ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"],
-      answer: "Hello! 👋 I'm Shiraj's AI assistant. How can I help you today?"
-    },
-    {
-      keywords: ["name", "who are you", "what are you"],
-      answer: "I'm an AI chatbot created by Shiraj Ahmed. I'm here to help answer questions about web development, his projects, and general inquiries!"
-    },
-    {
-      keywords: ["shiraj", "creator", "developer", "who is shiraj", "about shiraj"],
-      answer: "Shiraj Ahmed is a talented frontend developer who specializes in React, Next.js, and modern web technologies. He built this portfolio website and chatbot!"
-    },
-    {
-      keywords: ["help", "what can you do", "capabilities", "features"],
-      answer: "I can help you with:\n• Information about Shiraj's projects\n• Web development questions\n• General conversation\n• Voice interaction (if supported)\n• Navigate through the website tools"
-    },
-    {
-      keywords: ["projects", "portfolio", "work", "tools"],
-      answer: "Shiraj has built several amazing tools including:\n• Password Generator\n• QR Code Generator\n• Color Generator\n• Calculator Suite\n• Social Media Downloader\n• And many more! Check out the Tools section."
-    },
-    {
-      keywords: ["react", "nextjs", "next.js", "javascript", "web development"],
-      answer: "Great question! React is a powerful JavaScript library for building user interfaces. Next.js is a React framework that adds features like server-side rendering and static generation. Shiraj uses these technologies extensively!"
-    },
-    {
-      keywords: ["contact", "email", "reach", "get in touch"],
-      answer: "You can reach Shiraj through his social media links on this website or check his contact information in the portfolio section!"
-    },
-    {
-      keywords: ["thank you", "thanks", "appreciate"],
-      answer: "You're very welcome! 😊 I'm happy to help. Is there anything else you'd like to know?"
-    },
-    {
-      keywords: ["bye", "goodbye", "see you", "farewell"],
-      answer: "Goodbye! 👋 Thanks for chatting with me. Feel free to come back anytime!"
-    },
-    {
-      keywords: ["how are you", "how do you feel", "what's up"],
-      answer: "I'm doing great, thank you for asking! 🤖 I'm always ready to help and chat. How are you doing today?"
-    },
-    {
-      keywords: ["weather", "time", "date"],
-      answer: "I don't have access to real-time data like weather or current time, but I can help you with web development questions and information about Shiraj's projects!"
-    },
-    {
-      keywords: ["ai", "artificial intelligence", "machine learning"],
-      answer: "AI is fascinating! While I'm a simple rule-based chatbot, AI encompasses machine learning, natural language processing, and much more. It's revolutionizing how we interact with technology!"
-    }
-  ];
-
   useEffect(() => {
+    const fetchKnowledgeBase = async () => {
+      try {
+        const response = await fetch('/api/sheets');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const transformedKnowledgeBase = data.data.map(item => ({
+          keywords: item.question.toLowerCase().split(/\s*,\s*|\s+/).filter(Boolean),
+          answer: item.answer
+        }));
+        setDynamicKnowledgeBase(transformedKnowledgeBase);
+        setKnowledgeBaseError(null); // Clear any previous errors
+      } catch (error) {
+        console.error("Failed to fetch knowledge base:", error);
+        setKnowledgeBaseError("Failed to load knowledge base. Using limited internal data.");
+        // Fallback to a default message if fetching fails
+        setDynamicKnowledgeBase([
+          {
+            keywords: ["hello", "hi"],
+            answer: "Hello! I couldn't load my full knowledge base right now, but I can still chat with you. How can I help?"
+          }
+        ]);
+      } finally {
+        setIsKnowledgeBaseLoading(false);
+      }
+    };
+
+    fetchKnowledgeBase();
+
     // Initialize with welcome message
     setMessages([
       {
@@ -157,64 +138,68 @@ export default function Chatbot() {
     setInputText("");
     setIsLoading(true);
 
-    // Simulate thinking time
-    setTimeout(() => {
-      const response = findBestAnswer(text);
+    // Simulate thinking time and get response
+    const response = findBestAnswer(text);
       
-      const botMessage = {
-        id: Date.now() + 1,
-        text: response,
-        sender: "bot",
-        timestamp: new Date().toLocaleTimeString(),
-      };
+    const botMessage = {
+      id: Date.now() + 1,
+      text: response,
+      sender: "bot",
+      timestamp: new Date().toLocaleTimeString(),
+    };
 
-      setMessages((prev) => [...prev, botMessage]);
-      setIsLoading(false);
+    setMessages((prev) => [...prev, botMessage]);
+    setIsLoading(false);
 
-      // Speak the response if enabled
-      if (isSpeechEnabled && 'speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(response);
-        utterance.rate = 0.8;
-        utterance.pitch = 1;
-        speechSynthesis.speak(utterance);
-      }
-    }, 1000);
+    // Speak the response if enabled
+    if (isSpeechEnabled && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(response);
+      utterance.rate = 1.1; // Increased for clearer speech
+      utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
+    }
   };
 
   const findBestAnswer = (query) => {
     const queryLower = query.toLowerCase();
-    
-    // Find the best matching knowledge base entry
+    const queryWords = queryLower.split(/\s+/).filter(Boolean); // Split query into words
+
     let bestMatch = null;
     let highestScore = 0;
 
-    for (const entry of knowledgeBase) {
-      let score = 0;
-      
-      // Check how many keywords match
+    for (const entry of dynamicKnowledgeBase) {
+      let currentScore = 0;
+      const matchedKeywords = new Set(); // To avoid double-counting words
+
       for (const keyword of entry.keywords) {
-        if (queryLower.includes(keyword.toLowerCase())) {
-          score += keyword.length; // Longer keywords get higher scores
+        const keywordLower = keyword.toLowerCase();
+        
+        // Check for exact word matches
+        if (queryWords.includes(keywordLower)) {
+          currentScore += keywordLower.length * 2; // Higher score for exact word match
+          matchedKeywords.add(keywordLower);
+        } else if (queryLower.includes(keywordLower)) {
+          // Fallback to substring match if not an exact word, but with lower score
+          currentScore += keywordLower.length;
+          matchedKeywords.add(keywordLower);
         }
       }
       
-      if (score > highestScore) {
-        highestScore = score;
+      if (currentScore > highestScore) {
+        highestScore = currentScore;
         bestMatch = entry;
       }
     }
 
-    // If we found a good match, return it
     if (bestMatch && highestScore > 0) {
       return bestMatch.answer;
     }
 
-    // Fallback responses for unmatched queries
     const fallbackResponses = [
-      "I'm not sure about that specific topic. Could you try asking about Shiraj's projects, web development, or something else I might know?",
-      "That's an interesting question! I'm still learning. You might want to ask about Shiraj's work, his tools, or web development topics.",
-      "I don't have information about that right now. Feel free to ask me about Shiraj's portfolio, his development projects, or general web development questions!",
-      "Hmm, I'm not familiar with that. Try asking me about the tools on this website, Shiraj's background, or web development topics!"
+      "I'm not sure about that. Can you try rephrasing your question?",
+      "I'm still learning. Please ask me something else.",
+      "I don't have information on that topic at the moment. Is there anything else I can assist you with?",
+      "That's an interesting question! I might not have the answer yet. Try a different query."
     ];
 
     return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
@@ -228,10 +213,16 @@ export default function Chatbot() {
   };
 
   const toggleSpeech = () => {
+    if (isSpeechEnabled && 'speechSynthesis' in window) {
+      speechSynthesis.cancel();
+    }
     setIsSpeechEnabled(!isSpeechEnabled);
   };
 
   const clearChat = () => {
+    if ('speechSynthesis' in window) {
+      speechSynthesis.cancel();
+    }
     setMessages([
       {
         id: 1,
@@ -243,12 +234,12 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="bg-white/95 backdrop-blur-sm p-6 h-full flex flex-col rounded-2xl border border-gray-200 shadow-sm">
+    <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm p-6 h-full flex flex-col rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm dark:shadow-lg">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-3">
           <FaRobot className="text-2xl text-blue-500" />
-          <h2 className="text-2xl font-bold text-gray-800">AI Assistant</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">AI Assistant</h2>
         </div>
         <div className="flex gap-2">
           <button
@@ -273,8 +264,20 @@ export default function Chatbot() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
-        {messages.map((message) => (
+      <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 bg-gray-50/50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+        {isKnowledgeBaseLoading && (
+          <div className="flex justify-center items-center h-full text-gray-500">
+            <p>Loading knowledge base...</p>
+          </div>
+        )}
+
+        {knowledgeBaseError && (
+          <div className="flex justify-center items-center p-2 bg-red-100 text-red-600 rounded-lg">
+            <p>{knowledgeBaseError}</p>
+          </div>
+        )}
+
+        {!isKnowledgeBaseLoading && messages.map((message) => (
           <div
             key={message.id}
             className={`flex ${
@@ -285,7 +288,7 @@ export default function Chatbot() {
               className={`max-w-xs md:max-w-md px-4 py-3 rounded-2xl ${
                 message.sender === "user"
                   ? "bg-blue-500 text-white shadow-sm"
-                  : "bg-white text-gray-800 shadow-sm border border-gray-200"
+                  : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 shadow-sm border border-gray-200 dark:border-gray-600"
               }`}
             >
               <div className="flex items-start gap-2">
@@ -328,15 +331,15 @@ export default function Chatbot() {
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message or use voice..."
-            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={isLoading}
+            className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={isLoading || isKnowledgeBaseLoading}
           />
         </div>
 
         {speechSupported && (
           <button
             onClick={toggleListening}
-            disabled={isLoading}
+            disabled={isLoading || isKnowledgeBaseLoading}
             className={`p-3 rounded-xl transition-all ${
               isListening
                 ? "bg-red-500 text-white animate-pulse"
@@ -350,7 +353,7 @@ export default function Chatbot() {
 
         <button
           onClick={() => sendMessage()}
-          disabled={!inputText.trim() || isLoading}
+          disabled={!inputText.trim() || isLoading || isKnowledgeBaseLoading}
           className="p-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           title="Send message"
         >
@@ -360,7 +363,7 @@ export default function Chatbot() {
 
       {/* Status */}
       <div className="mt-4 text-center">
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
           {isListening
             ? "🎤 Listening... Speak now!"
             : !speechSupported

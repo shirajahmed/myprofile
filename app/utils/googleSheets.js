@@ -1,12 +1,12 @@
-const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY;
-const SHEET_ID = process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID;
+const API_KEY = process.env.AI_CHAT_GOOGLE_SHEETS_API_KEY;
+const SHEET_ID = process.env.AI_CHAT_GOOGLE_SHEET_ID;
 
 export async function searchAnswers() {
   try {
     // If no API key or sheet ID, return fallback data
     if (!API_KEY || !SHEET_ID) {
       console.warn(
-        "Google Sheets API key or Sheet ID not configured, using fallback data"
+        "Google Sheets API key or Sheet ID not configured, using fallback data",
       );
       return getFallbackData();
     }

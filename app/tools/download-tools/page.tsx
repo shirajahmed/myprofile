@@ -2,14 +2,33 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
+
+interface DownloadFormat {
+  downloadUrl: string;
+  filename?: string;
+  format: string;
+  type: string; // 'video', 'audio', 'image'
+  quality: string;
+  size: string;
+}
+
+interface DownloadData {
+  thumbnail: string;
+  title: string;
+  author: string;
+  duration: string;
+  views: string;
+  platform: string;
+  formats: DownloadFormat[];
+}
 
 export default function SocialMediaDownloader() {
   const [url, setUrl] = useState("");
-  const [platform, setPlatform] = useState("youtube");
+  const [platform, setPlatform] = useState<PlatformKey>("youtube");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [downloadData, setDownloadData] = useState(null);
+  const [downloadData, setDownloadData] = useState<DownloadData | null>(null);
 
   const platforms = {
     youtube: { name: "YouTube", icon: "📺", placeholder: "https://youtube.com/watch?v=..." },
@@ -17,18 +36,20 @@ export default function SocialMediaDownloader() {
     facebook: { name: "Facebook", icon: "👥", placeholder: "https://facebook.com/..." },
     tiktok: { name: "TikTok", icon: "🎵", placeholder: "https://tiktok.com/@user/video/..." },
     twitter: { name: "Twitter/X", icon: "🐦", placeholder: "https://twitter.com/user/status/..." },
-  };
+  } as const;
 
-  const detectPlatform = (inputUrl) => {
+  type PlatformKey = keyof typeof platforms;
+
+  const detectPlatform = (inputUrl: string): PlatformKey => {
     if (inputUrl.includes('youtube.com') || inputUrl.includes('youtu.be')) return 'youtube';
     if (inputUrl.includes('instagram.com')) return 'instagram';
     if (inputUrl.includes('facebook.com') || inputUrl.includes('fb.watch')) return 'facebook';
     if (inputUrl.includes('tiktok.com')) return 'tiktok';
     if (inputUrl.includes('twitter.com') || inputUrl.includes('x.com')) return 'twitter';
-    return 'youtube';
+    return 'youtube'; // Default platform
   };
 
-  const handleUrlChange = (inputUrl) => {
+  const handleUrlChange = (inputUrl: string) => {
     setUrl(inputUrl);
     if (inputUrl) {
       const detectedPlatform = detectPlatform(inputUrl);
@@ -36,7 +57,7 @@ export default function SocialMediaDownloader() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!url.trim()) {
       setError("Please enter a valid URL");
@@ -63,14 +84,16 @@ export default function SocialMediaDownloader() {
 
       const data = await response.json();
       setDownloadData(data);
-    } catch (err) {
-      setError(err.message || "Failed to process the URL. Please try again.");
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "Failed to process the URL. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDownload = async (format) => {
+  const handleDownload = async (format: DownloadFormat) => {
     try {
       // Create a temporary link to trigger download
       const link = document.createElement('a');
@@ -99,7 +122,7 @@ export default function SocialMediaDownloader() {
             {Object.entries(platforms).map(([key, platformData]) => (
               <button
                 key={key}
-                onClick={() => setPlatform(key)}
+                onClick={() => setPlatform(key as PlatformKey)}
                 className={`flex items-center justify-center gap-2 p-3 rounded-lg font-medium transition-all ${
                   platform === key
                     ? 'bg-blue-500 text-white'

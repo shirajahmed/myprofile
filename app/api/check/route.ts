@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   if (!username)
     return NextResponse.json({ error: "No username" }, { status: 400 });
 
-  const platformsToCheck = platformsParam ? platformsParam.split(",") : [];
+
 
   const platforms = {
     instagram: `https://www.instagram.com/${username}`,
@@ -18,9 +18,15 @@ export async function GET(request: NextRequest) {
     github: `https://github.com/${username}`,
     x: `https://x.com/${username}`,
     google: `https://gmail.com/${username}`, // placeholder: Gmail doesn't use this
-  };
+  } as const; // 'as const' makes the object keys literal types
 
-  const results = {};
+  type PlatformKey = keyof typeof platforms;
+
+  const platformsToCheck: PlatformKey[] = platformsParam
+    ? (platformsParam.split(",") as PlatformKey[])
+    : [];
+
+  const results: Record<string, string> = {};
 
   await Promise.all(
     platformsToCheck.map(async (platform) => {

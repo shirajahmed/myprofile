@@ -22,7 +22,7 @@ export async function readSheet(sheetName, range) {
   try {
     const sheets = await getGoogleSheets();
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID_CONTACT_FORM, // Use NEXT_PUBLIC_GOOGLE_SHEET_ID for consistency
+      spreadsheetId: process.env.GOOGLE_SHEET_ID_CONTACT_FORM, // Use AI_CHAT_GOOGLE_SHEET_ID for consistency
       range: `${sheetName}!${range}`,
     });
     console.log(
@@ -47,7 +47,7 @@ export async function appendSheet(sheetName, range, values) {
   try {
     const sheets = await getGoogleSheets();
     const response = await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID, // Use the same sheet ID
+      spreadsheetId: process.env.AI_CHAT_GOOGLE_SHEET_ID, // Use the same sheet ID
       range: `${sheetName}!${range}`,
       valueInputOption: "RAW",
       resource: {

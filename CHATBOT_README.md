@@ -45,8 +45,8 @@ Edit `.env.local` file:
 ```env
 GOOGLE_SHEETS_API_KEY=your_actual_api_key_here
 GOOGLE_SHEET_ID=your_actual_sheet_id_here
-NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY=your_actual_api_key_here
-NEXT_PUBLIC_GOOGLE_SHEET_ID=your_actual_sheet_id_here
+AI_CHAT_GOOGLE_SHEETS_API_KEY=your_actual_api_key_here
+AI_CHAT_GOOGLE_SHEET_ID=your_actual_sheet_id_here
 ```
 
 ### 4. Run the Development Server
@@ -108,8 +108,8 @@ Make sure to add these in your Vercel dashboard:
 
 - `GOOGLE_SHEETS_API_KEY`
 - `GOOGLE_SHEET_ID`
-- `NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY`
-- `NEXT_PUBLIC_GOOGLE_SHEET_ID`
+- `AI_CHAT_GOOGLE_SHEETS_API_KEY`
+- `AI_CHAT_GOOGLE_SHEET_ID`
 
 ## 📝 Usage
 

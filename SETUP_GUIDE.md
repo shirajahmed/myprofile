@@ -56,8 +56,8 @@ GOOGLE_SHEETS_API_KEY=AIzaSyC-your-actual-api-key-here
 GOOGLE_SHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
 
 # For client-side access (same values)
-NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY=AIzaSyC-your-actual-api-key-here
-NEXT_PUBLIC_GOOGLE_SHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
+AI_CHAT_GOOGLE_SHEETS_API_KEY=AIzaSyC-your-actual-api-key-here
+AI_CHAT_GOOGLE_SHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
 ```
 
 ## Step 4: Install and Run
@@ -98,8 +98,8 @@ git push -u origin main
 4. Add environment variables:
    - `GOOGLE_SHEETS_API_KEY`
    - `GOOGLE_SHEET_ID`
-   - `NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY`
-   - `NEXT_PUBLIC_GOOGLE_SHEET_ID`
+   - `AI_CHAT_GOOGLE_SHEETS_API_KEY`
+   - `AI_CHAT_GOOGLE_SHEET_ID`
 5. Deploy!
 
 ## 🔧 Customization Ideas

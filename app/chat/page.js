@@ -2,17 +2,18 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
-
 const getTypingMessage = (typingUsers) => {
   const users = Object.values(typingUsers);
   if (users.length === 0) return null;
-  
+
   // Filter out potential stale users (e.g., if a stop_typing wasn't received)
-  const activeTypingUsers = users.filter(user => Date.now() - user.timer < 5000); // Consider typing for 5 seconds
+  const activeTypingUsers = users.filter(
+    (user) => Date.now() - user.timer < 5000,
+  ); // Consider typing for 5 seconds
 
   if (activeTypingUsers.length === 0) return null;
-  
-  const userNames = activeTypingUsers.map(user => user.userName);
+
+  const userNames = activeTypingUsers.map((user) => user.userName);
 
   if (userNames.length === 1) {
     return `${userNames[0]} is typing...`;
@@ -83,15 +84,24 @@ export default function Chat() {
   const [typingUsers, setTypingUsers] = useState({}); // { userId: {userName, timer} }
   const typingTimeoutRef = useRef(null);
   const fileRef = useRef();
+  const messageInputRef = useRef(null);
   const messagesEndRef = useRef();
+  const previousOnlineUsers = useRef([]); // Ref to store previous online users
   const observerRef = useRef(null); // Ref for IntersectionObserver
   const [copiedMessage, setCopiedMessage] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isAILoading, setIsAILoading] = useState(false);
+  const [showAIPromptSelection, setShowAIPromptSelection] = useState(false);
 
-  const markMessageAsRead = useCallback((messageId) => {
-    if (ws && ws.readyState === WebSocket.OPEN && chatId) {
-      ws.send(JSON.stringify({ type: "message_read", chatId, messageId }));
-    }
-  }, [ws, chatId]);
+  const markMessageAsRead = useCallback(
+    (messageId) => {
+      if (ws && ws.readyState === WebSocket.OPEN && chatId) {
+        ws.send(JSON.stringify({ type: "message_read", chatId, messageId }));
+      }
+    },
+    [ws, chatId],
+  );
 
   const messagesRef = useRef([]);
   useEffect(() => {
@@ -104,7 +114,7 @@ export default function Chat() {
   }, [markMessageAsRead]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typingUsers]);
 
   useEffect(() => {
@@ -121,13 +131,13 @@ export default function Chat() {
             const messageId = entry.target.dataset.messageId;
             const msg = messagesRef.current.find((m) => m.id === messageId);
 
-            if (msg && msg.userId !== userId && msg.readStatus !== 'seen') {
+            if (msg && msg.userId !== userId && msg.readStatus !== "seen") {
               markMessageAsReadRef.current(messageId);
             }
           }
         });
       },
-      { threshold: 0.8 }
+      { threshold: 0.8 },
     );
 
     observerRef.current = observer;
@@ -170,19 +180,67 @@ export default function Chat() {
           case "text":
           case "image":
             setMessages((prev) => {
-              const updated = [...prev, { ...message, uniqueId: message.id, readStatus: 'sent' }];
+              const updated = [...prev, { ...message, readStatus: "sent" }];
               saveMessages(chatId, updated);
               return updated;
             });
             break;
           case "userList":
+            // Detect joined users
+            const joinedUsers = message.users.filter(
+              (user) =>
+                !previousOnlineUsers.current.some(
+                  (prevUser) => prevUser.userId === user.userId,
+                ),
+            );
+            joinedUsers.forEach((user) => {
+              if (user.userId !== userId) {
+                // Don't show "You joined" message
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: `system-joined-${user.userId}-${Date.now()}`,
+                    type: "system",
+                    text: `${user.userName} joined the room 👋`,
+                    timestamp: new Date().toISOString(),
+                  },
+                ]);
+              }
+            });
+
+            // Detect left users
+            const leftUsers = previousOnlineUsers.current.filter(
+              (user) =>
+                !message.users.some(
+                  (currUser) => currUser.userId === user.userId,
+                ),
+            );
+            leftUsers.forEach((user) => {
+              if (user.userId !== userId) {
+                // Don't show "You left" message
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: `system-left-${user.userId}-${Date.now()}`,
+                    type: "system",
+                    text: `${user.userName} left the room 👋`,
+                    timestamp: new Date().toISOString(),
+                  },
+                ]);
+              }
+            });
+
+            previousOnlineUsers.current = message.users; // Update ref for next comparison
             setOnlineUsers(message.users);
             break;
           case "typing":
             if (message.userId !== userId) {
               setTypingUsers((prev) => ({
                 ...prev,
-                [message.userId]: { userName: message.userName, timer: Date.now() },
+                [message.userId]: {
+                  userName: message.userName,
+                  timer: Date.now(),
+                },
               }));
             }
             break;
@@ -196,18 +254,23 @@ export default function Chat() {
           case "message_read":
             setMessages((prevMessages) =>
               prevMessages.map((msg) =>
-                msg.id === message.messageId && msg.readStatus === 'sent'
+                msg.id === message.messageId && msg.readStatus === "sent"
                   ? { ...msg, readStatus: "read" }
-                  : msg
-              )
+                  : msg,
+              ),
             );
             break;
           case "message_seen_by_all":
-            console.log("Message seen by all received for messageId:", message.messageId);
+            console.log(
+              "Message seen by all received for messageId:",
+              message.messageId,
+            );
             setMessages((prevMessages) =>
               prevMessages.map((msg) =>
-                msg.id === message.messageId ? { ...msg, readStatus: "seen" } : msg
-              )
+                msg.id === message.messageId
+                  ? { ...msg, readStatus: "seen" }
+                  : msg,
+              ),
             );
             break;
           default:
@@ -227,8 +290,8 @@ export default function Chat() {
       };
 
       setWs(currentWs); // Set the ws state here
-
-    } else if (ws) { // If not joined and ws exists, close it.
+    } else if (ws) {
+      // If not joined and ws exists, close it.
       ws.close();
       setWs(null);
     }
@@ -257,6 +320,12 @@ export default function Chat() {
     }
   }, []);
 
+  useEffect(() => {
+    if (replyingTo && messageInputRef.current) {
+      messageInputRef.current.focus();
+    }
+  }, [replyingTo]);
+
   const createChat = () => {
     if (!userName.trim()) return alert("Enter your name first");
     const id = Math.random().toString(36).substr(2, 9);
@@ -275,7 +344,7 @@ export default function Chat() {
     localStorage.setItem("current-user-name", userName);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!message.trim() || !ws || ws.readyState !== WebSocket.OPEN) return;
 
     const msg = {
@@ -285,15 +354,17 @@ export default function Chat() {
       text: message,
       timestamp: new Date().toISOString(),
       type: "text",
+      ...(replyingTo && { replyToId: replyingTo.id }),
     };
 
     ws.send(JSON.stringify(msg));
     setMessages((prev) => {
-      const updated = [...prev, { ...msg, uniqueId: msg.id, readStatus: 'sent' }];
+      const updated = [...prev, { ...msg, readStatus: 'sent' }];
       saveMessages(chatId, updated);
       return updated;
     });
     setMessage("");
+    setReplyingTo(null); // Clear replyingTo after sending
   };
 
   const compressImage = (file, callback) => {
@@ -328,14 +399,16 @@ export default function Chat() {
         image: compressedImage,
         timestamp: new Date().toISOString(),
         type: "image",
+        ...(replyingTo && { replyToId: replyingTo.id }),
       };
 
       ws.send(JSON.stringify(msg));
       setMessages((prev) => {
-        const updated = [...prev, { ...msg, uniqueId: msg.id, readStatus: 'sent' }];
+        const updated = [...prev, { ...msg, readStatus: "sent" }];
         saveMessages(chatId, updated);
         return updated;
       });
+      setReplyingTo(null); // Clear replyingTo after sending
     });
   };
 
@@ -365,7 +438,44 @@ export default function Chat() {
         console.error("Failed to copy Chat ID: ", err);
       }
     }
+  }; // Added missing closing brace
+
+  const handleGenerateAIResponse = async (prompt) => {
+    if (!prompt.trim()) return;
+
+    setIsAILoading(true);
+    setAiPrompt(prompt); // Store the prompt for display while loading
+
+    try {
+      const res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage(data.text); // Directly fill the message input
+      } else {
+        setMessage(`AI Error: ${data.error || 'Failed to get response'}`);
+      }
+    } catch (error) {
+      console.error("Failed to fetch from Gemini API:", error);
+      setMessage("AI Error: Could not connect to Gemini API.");
+    } finally {
+      setIsAILoading(false);
+      setAiPrompt(""); // Clear aiPrompt after generation
+      setShowAIPromptSelection(false); // Close the prompt selection UI
+      messageInputRef.current?.focus(); // Focus the message input
+    }
   };
+
+  useEffect(() => {
+    if (replyingTo && messageInputRef.current) {
+      messageInputRef.current.focus();
+    }
+  }, [replyingTo]);
 
   return (
     <div className="h-screen flex flex-col align-center justify-center p-4 w-full mx-auto">
@@ -401,6 +511,21 @@ export default function Chat() {
                 Join Chat
               </button>
             </div>
+            <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+              <p>
+                Disclaimer: This is an anonymous chat application. By joining,
+                you agree to:
+              </p>
+              <ul className="list-disc list-inside text-left mx-auto max-w-xs mt-2">
+                <li>Respect other users.</li>
+                <li>No sharing of personal information.</li>
+                <li>No illegal activities.</li>
+                <li>Your chat data is not saved, we respect your privacy.</li>
+              </ul>
+              <p className="mt-2 font-semibold">
+                You’re anonymous here. Be kind
+              </p>
+            </div>
           </div>
         </div>
       ) : (
@@ -412,10 +537,17 @@ export default function Chat() {
               </h2>
               <p className="text-sm opacity-90 text-gray-900 dark:text-white flex items-center">
                 Chat ID: {chatId}
-                <button onClick={handleCopyChatId} className="ml-2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a65fa8]">
+                <button
+                  onClick={handleCopyChatId}
+                  className="ml-2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a65fa8]"
+                >
                   📋
                 </button>
-                {copiedMessage && <span className="ml-2 text-xs text-green-500">{copiedMessage}</span>}
+                {copiedMessage && (
+                  <span className="ml-2 text-xs text-green-500">
+                    {copiedMessage}
+                  </span>
+                )}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -437,79 +569,182 @@ export default function Chat() {
           <div className="h-screen flex-1 overflow-y-auto p-4 h-full bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md p-6 shadow-lg border-t border-gray-200 dark:border-gray-700 mx-auto w-full max-w-[769px]">
             {messages.map((msg) => (
               <div
-                key={msg.uniqueId}
+                key={msg.id}
                 id={`message-${msg.id}`} // Add unique ID for IntersectionObserver
                 data-message-id={msg.id} // Add data attribute for IntersectionObserver
-                className={`mb-4 flex ${msg.userId === userId ? "justify-end" : "justify-start"}`}
+                className={`mb-4 flex ${msg.userId === userId ? "justify-end" : "justify-start"} ${msg.type === "system" ? "justify-center" : ""}`}
               >
-                <div
-                  className={`max-w-xs lg:max-w-md ${
-                    msg.userId === userId
-                      ? "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg"
-                      : "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg text-gray-800 dark:text-white"
-                  } p-3 shadow`}
-                >
-                  {msg.userId !== userId && (
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="text-xs font-semibold text-[#a65fa8]">
-                        {msg.userName}
-                      </div>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          onlineUsers.some((u) => u.userId === msg.userId)
-                            ? "bg-green-400"
-                            : "bg-gray-400"
-                        }`}
-                      ></div>
-                    </div>
-                  )}
-                  {msg.type === "image" ? (
-                    <img
-                      src={msg.image}
-                      alt="Shared"
-                      className="max-w-full h-auto rounded"
-                    />
-                  ) : (
-                    <div
-                      className={
-                        msg.userId === userId
-                          ? "text-gray-900 dark:text-white"
-                          : "text-gray-900 dark:text-white"
-                      }
-                    >
-                      {msg.text}
-                    </div>
-                  )}
-                  <div
-                    className={`flex items-center justify-end text-xs mt-2 ${msg.userId === userId ? "text-green-700 dark:text-green-100" : "text-gray-500"}`}
-                  >
-                    {new Date(msg.timestamp).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    {msg.userId === userId && msg.readStatus && (
-                      <span className="ml-1">
-                        {msg.readStatus === 'sent' && '✔'}
-                        {msg.readStatus === 'read' && <span className="text-blue-500">✔</span>}
-                        {msg.readStatus === 'seen' && <span className="text-blue-500">✔✔</span>}
-                      </span>
-                    )}
+                {msg.type === "system" ? (
+                  <div className="text-sm text-gray-500 dark:text-gray-400 italic">
+                    {msg.text}
                   </div>
-                </div>
+                ) : (
+                  <div
+                    className={`max-w-xs lg:max-w-md ${
+                      msg.userId === userId
+                        ? "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg"
+                        : "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg text-gray-800 dark:text-white"
+                    } p-3 shadow`}
+                  >
+                    {msg.replyToId && (
+                      <div className="border-l-2 border-[#a65fa8] pl-2 mb-2 text-sm text-gray-600 dark:text-gray-400">
+                        {messages.find((m) => m.id === msg.replyToId)?.userName}
+                        :{" "}
+                        {messages.find((m) => m.id === msg.replyToId)?.type ===
+                        "image"
+                          ? "🖼️ Image"
+                          : messages
+                              .find((m) => m.id === msg.replyToId)
+                              ?.text.substring(0, 50) + "..."}
+                      </div>
+                    )}
+                    {msg.userId !== userId && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="text-xs font-semibold text-[#a65fa8]">
+                          {msg.userName}
+                        </div>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            onlineUsers.some((u) => u.userId === msg.userId)
+                              ? "bg-green-400"
+                              : "bg-gray-400"
+                          }`}
+                        ></div>
+                      </div>
+                    )}
+                    {msg.type === "image" ? (
+                      <img
+                        src={msg.image}
+                        alt="Shared"
+                        className="max-w-full h-auto rounded"
+                      />
+                    ) : (
+                      <div
+                        className={
+                          msg.userId === userId
+                            ? "text-gray-900 dark:text-white"
+                            : "text-gray-900 dark:text-white"
+                        }
+                      >
+                        {msg.text}
+                      </div>
+                    )}
+                    <div
+                      className={`flex items-center justify-end text-xs mt-2 ${msg.userId === userId ? "text-green-700 dark:text-green-100" : "text-gray-500"}`}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      <button
+                        onClick={() => setReplyingTo(msg)}
+                        className="ml-2 text-xs text-blue-500 hover:underline"
+                      >
+                        Reply
+                      </button>
+                      {msg.userId === userId && msg.readStatus && (
+                        <span className="ml-1">
+                          {msg.readStatus === "sent" && "✔"}
+                          {msg.readStatus === "read" && (
+                            <span className="text-blue-500">✔</span>
+                          )}
+                          {msg.readStatus === "seen" && (
+                            <span className="text-blue-500">✔✔</span>
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
           <div className="bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md border-t border-gray-200 dark:border-gray-700 p-4 mx-auto w-full max-w-[769px]">
+            {replyingTo && (
+              <div className="relative p-2 mb-2 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div className="text-xs text-gray-600 dark:text-gray-300 font-semibold mb-1">
+                  Replying to {replyingTo.userName}
+                </div>
+                {replyingTo.type === "image" ? (
+                  <img
+                    src={replyingTo.image}
+                    alt="Original message"
+                    className="max-h-20 rounded"
+                  />
+                ) : (
+                  <div className="text-sm text-gray-800 dark:text-gray-200 truncate">
+                    {replyingTo.text}
+                  </div>
+                )}
+                <button
+                  onClick={() => setReplyingTo(null)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  ✖
+                </button>
+              </div>
+            )}
             {getTypingMessage(typingUsers) && (
               <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                 {getTypingMessage(typingUsers)}
               </div>
             )}
-            <div className="flex gap-2 items-center">
-              <input
-                type="file"
+
+            {isAILoading && (
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                AI is thinking...
+              </div>
+            )}
+
+            {showAIPromptSelection && (
+                          <div className="absolute bottom-16 left-0 right-0 mx-auto w-full max-w-[769px] bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-lg rounded-lg p-4 mb-2 border border-gray-200 dark:border-gray-700">
+                            <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">AI Assistant</h3>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {['Summarize chat', 'Rephrase last message', 'Write a joke', 'Continue conversation'].map((tag) => (
+                                <button
+                                  key={tag}
+                                  onClick={() => setAiPrompt(tag)}
+                                  className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                                >
+                                  {tag}
+                                </button>
+                              ))}
+                            </div>
+                            <textarea
+                              value={aiPrompt}
+                              onChange={(e) => setAiPrompt(e.target.value)}
+                              placeholder="Enter custom prompt or select a tag..."
+                              rows="3"
+                              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white mb-3"
+                            ></textarea>
+                            <div className="flex justify-end gap-2">
+                              <button
+                                onClick={() => {
+                                  handleGenerateAIResponse(aiPrompt);
+                                  setShowAIPromptSelection(false);
+                                }}
+                                disabled={isAILoading || !aiPrompt.trim()}
+                                className="px-4 py-2 bg-gradient-to-r from-[#a65fa8] to-purple-600 hover:from-purple-600 hover:to-[#a65fa8] text-white rounded-lg font-medium disabled:opacity-50"
+                              >
+                                {isAILoading ? 'Generating...' : 'Generate'}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setShowAIPromptSelection(false);
+                                  setAiPrompt("");
+                                }}
+                                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-400 dark:hover:bg-gray-500"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex gap-2 items-center">
+                          <input
+                            type="file"
                 accept="image/*"
                 onChange={sendImage}
                 ref={fileRef}
@@ -521,7 +756,15 @@ export default function Chat() {
               >
                 📎
               </button>
+              <button
+                onClick={() => setShowAIPromptSelection(!showAIPromptSelection)}
+                className="p-2 text-gray-500 hover:text-gray-700"
+                title="AI Assistant"
+              >
+                🤖
+              </button>
               <input
+                ref={messageInputRef}
                 value={message}
                 onChange={(e) => {
                   setMessage(e.target.value);

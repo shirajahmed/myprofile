@@ -85,6 +85,7 @@ export default function Chat() {
   const fileRef = useRef();
   const messagesEndRef = useRef();
   const observerRef = useRef(null); // Ref for IntersectionObserver
+  const [copiedMessage, setCopiedMessage] = useState("");
 
   const markMessageAsRead = useCallback((messageId) => {
     if (ws && ws.readyState === WebSocket.OPEN && chatId) {
@@ -143,7 +144,7 @@ export default function Chat() {
         observerRef.current.disconnect();
       }
     };
-  }, [joined, userId]);
+  }, [joined, userId, messages]);
 
   useEffect(() => {
     let currentWs = null;
@@ -193,9 +194,16 @@ export default function Chat() {
             });
             break;
           case "message_read":
-            // Logic for read receipts will be here
+            setMessages((prevMessages) =>
+              prevMessages.map((msg) =>
+                msg.id === message.messageId && msg.readStatus === 'sent'
+                  ? { ...msg, readStatus: "read" }
+                  : msg
+              )
+            );
             break;
           case "message_seen_by_all":
+            console.log("Message seen by all received for messageId:", message.messageId);
             setMessages((prevMessages) =>
               prevMessages.map((msg) =>
                 msg.id === message.messageId ? { ...msg, readStatus: "seen" } : msg
@@ -280,6 +288,11 @@ export default function Chat() {
     };
 
     ws.send(JSON.stringify(msg));
+    setMessages((prev) => {
+      const updated = [...prev, { ...msg, uniqueId: msg.id, readStatus: 'sent' }];
+      saveMessages(chatId, updated);
+      return updated;
+    });
     setMessage("");
   };
 
@@ -318,6 +331,11 @@ export default function Chat() {
       };
 
       ws.send(JSON.stringify(msg));
+      setMessages((prev) => {
+        const updated = [...prev, { ...msg, uniqueId: msg.id, readStatus: 'sent' }];
+        saveMessages(chatId, updated);
+        return updated;
+      });
     });
   };
 
@@ -335,6 +353,18 @@ export default function Chat() {
     localStorage.removeItem("chat-expires");
     localStorage.removeItem("current-chat-id");
     localStorage.removeItem("current-user-name");
+  };
+
+  const handleCopyChatId = async () => {
+    if (chatId) {
+      try {
+        await navigator.clipboard.writeText(chatId);
+        setCopiedMessage("Copied!");
+        setTimeout(() => setCopiedMessage(""), 2000); // Clear message after 2 seconds
+      } catch (err) {
+        console.error("Failed to copy Chat ID: ", err);
+      }
+    }
   };
 
   return (
@@ -380,8 +410,12 @@ export default function Chat() {
               <h2 className="font-semibold capitalize text-gray-900 dark:text-white">
                 {userName}
               </h2>
-              <p className="text-sm opacity-90 text-gray-900 dark:text-white">
+              <p className="text-sm opacity-90 text-gray-900 dark:text-white flex items-center">
                 Chat ID: {chatId}
+                <button onClick={handleCopyChatId} className="ml-2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a65fa8]">
+                  📋
+                </button>
+                {copiedMessage && <span className="ml-2 text-xs text-green-500">{copiedMessage}</span>}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -456,6 +490,7 @@ export default function Chat() {
                     {msg.userId === userId && msg.readStatus && (
                       <span className="ml-1">
                         {msg.readStatus === 'sent' && '✔'}
+                        {msg.readStatus === 'read' && <span className="text-blue-500">✔</span>}
                         {msg.readStatus === 'seen' && <span className="text-blue-500">✔✔</span>}
                       </span>
                     )}

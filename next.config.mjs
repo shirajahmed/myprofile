@@ -59,6 +59,7 @@ const nextConfig = {
     GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
     AI_CHAT_GOOGLE_SHEETS_API_KEY: process.env.GOOGLE_SHEETS_API_KEY,
     AI_CHAT_GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
+    NEXT_PUBLIC_WS_PORT: process.env.NEXT_PUBLIC_WS_PORT || '3001',
   },
 };
 

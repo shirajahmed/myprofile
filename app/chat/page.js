@@ -162,9 +162,21 @@ export default function Chat() {
     if (joined && chatId && userName) {
       // Determine WebSocket URL based on environment
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${wsProtocol}//${window.location.hostname}:${
-        process.env.NEXT_PUBLIC_WS_PORT || 3001
-      }?chatId=${chatId}&userId=${userId}&userName=${userName}`;
+      let wsBaseUrl;
+
+      if (process.env.CHAT_APP_WEBSOCKET_URL) {
+        // Use the full URL from the environment variable directly,
+        // ensuring it starts with wss:// or ws://
+        wsBaseUrl = process.env.CHAT_APP_WEBSOCKET_URL.replace(
+          /^https?:\/\//i,
+          wsProtocol + "//",
+        );
+      } else {
+        // Fallback to local development URL
+        wsBaseUrl = `${wsProtocol}//${window.location.hostname}:${process.env.CHAT_APP_WS_PORT || 3001}`;
+      }
+
+      const wsUrl = `${wsBaseUrl}?chatId=${chatId}&userId=${userId}&userName=${userName}`;
 
       currentWs = new WebSocket(wsUrl);
 
@@ -359,7 +371,7 @@ export default function Chat() {
 
     ws.send(JSON.stringify(msg));
     setMessages((prev) => {
-      const updated = [...prev, { ...msg, readStatus: 'sent' }];
+      const updated = [...prev, { ...msg, readStatus: "sent" }];
       saveMessages(chatId, updated);
       return updated;
     });
@@ -447,10 +459,10 @@ export default function Chat() {
     setAiPrompt(prompt); // Store the prompt for display while loading
 
     try {
-      const res = await fetch('/api/gemini', {
-        method: 'POST',
+      const res = await fetch("/api/gemini", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ prompt }),
       });
@@ -458,7 +470,7 @@ export default function Chat() {
       if (res.ok) {
         setMessage(data.text); // Directly fill the message input
       } else {
-        setMessage(`AI Error: ${data.error || 'Failed to get response'}`);
+        setMessage(`AI Error: ${data.error || "Failed to get response"}`);
       }
     } catch (error) {
       console.error("Failed to fetch from Gemini API:", error);
@@ -699,52 +711,59 @@ export default function Chat() {
             )}
 
             {showAIPromptSelection && (
-                          <div className="absolute bottom-16 left-0 right-0 mx-auto w-full max-w-[769px] bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-lg rounded-lg p-4 mb-2 border border-gray-200 dark:border-gray-700">
-                            <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">AI Assistant</h3>
-                            <div className="flex flex-wrap gap-2 mb-3">
-                              {['Summarize chat', 'Rephrase last message', 'Write a joke', 'Continue conversation'].map((tag) => (
-                                <button
-                                  key={tag}
-                                  onClick={() => setAiPrompt(tag)}
-                                  className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
-                                >
-                                  {tag}
-                                </button>
-                              ))}
-                            </div>
-                            <textarea
-                              value={aiPrompt}
-                              onChange={(e) => setAiPrompt(e.target.value)}
-                              placeholder="Enter custom prompt or select a tag..."
-                              rows="3"
-                              className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white mb-3"
-                            ></textarea>
-                            <div className="flex justify-end gap-2">
-                              <button
-                                onClick={() => {
-                                  handleGenerateAIResponse(aiPrompt);
-                                  setShowAIPromptSelection(false);
-                                }}
-                                disabled={isAILoading || !aiPrompt.trim()}
-                                className="px-4 py-2 bg-gradient-to-r from-[#a65fa8] to-purple-600 hover:from-purple-600 hover:to-[#a65fa8] text-white rounded-lg font-medium disabled:opacity-50"
-                              >
-                                {isAILoading ? 'Generating...' : 'Generate'}
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setShowAIPromptSelection(false);
-                                  setAiPrompt("");
-                                }}
-                                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-400 dark:hover:bg-gray-500"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                        <div className="flex gap-2 items-center">
-                          <input
-                            type="file"
+              <div className="absolute bottom-16 left-0 right-0 mx-auto w-full max-w-[769px] bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-lg rounded-lg p-4 mb-2 border border-gray-200 dark:border-gray-700">
+                <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">
+                  AI Assistant
+                </h3>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {[
+                    "Summarize chat",
+                    "Rephrase last message",
+                    "Write a joke",
+                    "Continue conversation",
+                  ].map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => setAiPrompt(tag)}
+                      className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm hover:bg-gray-300 dark:hover:bg-gray-600"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  placeholder="Enter custom prompt or select a tag..."
+                  rows="3"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white mb-3"
+                ></textarea>
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      handleGenerateAIResponse(aiPrompt);
+                      setShowAIPromptSelection(false);
+                    }}
+                    disabled={isAILoading || !aiPrompt.trim()}
+                    className="px-4 py-2 bg-gradient-to-r from-[#a65fa8] to-purple-600 hover:from-purple-600 hover:to-[#a65fa8] text-white rounded-lg font-medium disabled:opacity-50"
+                  >
+                    {isAILoading ? "Generating..." : "Generate"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAIPromptSelection(false);
+                      setAiPrompt("");
+                    }}
+                    className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-400 dark:hover:bg-gray-500"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="flex gap-2 items-center">
+              <input
+                type="file"
                 accept="image/*"
                 onChange={sendImage}
                 ref={fileRef}

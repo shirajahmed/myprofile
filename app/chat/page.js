@@ -164,16 +164,16 @@ export default function Chat() {
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       let wsBaseUrl;
 
-      if (process.env.CHAT_APP_WEBSOCKET_URL) {
+      if (process.env.NEXT_PUBLIC_CHAT_APP_WEBSOCKET_URL) {
         // Use the full URL from the environment variable directly,
         // ensuring it starts with wss:// or ws://
-        wsBaseUrl = process.env.CHAT_APP_WEBSOCKET_URL.replace(
+        wsBaseUrl = process.env.NEXT_PUBLIC_CHAT_APP_WEBSOCKET_URL.replace(
           /^https?:\/\//i,
           wsProtocol + "//",
         );
       } else {
         // Fallback to local development URL
-        wsBaseUrl = `${wsProtocol}//${window.location.hostname}:${process.env.CHAT_APP_WS_PORT || 3001}`;
+        wsBaseUrl = `${wsProtocol}//${window.location.hostname}:${process.env.NEXT_PUBLIC_CHAT_APP_WS_PORT || 3001}`;
       }
 
       const wsUrl = `${wsBaseUrl}?chatId=${chatId}&userId=${userId}&userName=${userName}`;

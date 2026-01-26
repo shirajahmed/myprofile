@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState, useEffect, useRef } from "react";
 
 export default function Chat() {
@@ -241,35 +240,35 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-screen bg-gray-100 flex flex-col">
+    <div className="h-screen flex flex-col align-center justify-center p-4 w-full mx-auto">
       {!joined ? (
         <div className="flex-1 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h1 className="text-2xl font-bold mb-6 text-center text-green-600">
+          <div className="bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 w-96">
+            <h1 className="text-2xl font-bold mb-6 text-center text-[#a65fa8]">
               Anonymous Chat
             </h1>
             <input
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
               placeholder="Enter your name"
-              className="w-full border border-gray-300 px-4 py-3 rounded-lg mb-4 focus:outline-none focus:border-green-500"
+              className="my-2 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white"
             />
             <input
               value={chatId}
               onChange={(e) => setChatId(e.target.value)}
               placeholder="Enter Chat ID to join"
-              className="w-full border border-gray-300 px-4 py-3 rounded-lg mb-4 focus:outline-none focus:border-green-500"
+              className="my-4 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white"
             />
             <div className="flex gap-3">
               <button
                 onClick={createChat}
-                className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium"
+                className="flex-1 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 py-3  font-medium"
               >
                 Create New Chat
               </button>
               <button
                 onClick={joinChat}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-medium"
+                className="flex-1 bg-gradient-to-r from-[#a65fa8] to-purple-600 hover:from-purple-600 hover:to-[#a65fa8] transition-all duration-300 transform hover:scale-105 text-white py-3 rounded-lg font-medium"
               >
                 Join Chat
               </button>
@@ -278,28 +277,32 @@ export default function Chat() {
         </div>
       ) : (
         <>
-          <div className="bg-green-600 text-white p-4 flex justify-between items-center">
+          <div className="bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md text-gray-900 dark:text-white p-4 flex justify-between items-center mx-auto w-full max-w-[769px]">
             <div>
-              <h2 className="font-semibold">{userName}</h2>
-              <p className="text-sm opacity-90">Chat ID: {chatId}</p>
+              <h2 className="font-semibold capitalize text-gray-900 dark:text-white">
+                {userName}
+              </h2>
+              <p className="text-sm opacity-90 text-gray-900 dark:text-white">
+                Chat ID: {chatId}
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <div className="text-sm">Online: {onlineUsers.length}</div>
-                <div className="text-xs opacity-75">
+                <div className="text-xs opacity-75 capitalize">
                   {onlineUsers.map((user) => user.userName).join(", ")}
                 </div>
               </div>
               <button
                 onClick={terminateChat}
-                className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm"
+                className="bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-700 dark:hover:bg-blue-800 px-3 py-1 rounded text-sm"
               >
                 End Chat
               </button>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+          <div className="h-screen flex-1 overflow-y-auto p-4 h-full bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md p-6 shadow-lg border-t border-gray-200 dark:border-gray-700 mx-auto w-full max-w-[769px]">
             {messages.map((msg) => (
               <div
                 key={msg.uniqueId}
@@ -308,13 +311,13 @@ export default function Chat() {
                 <div
                   className={`max-w-xs lg:max-w-md ${
                     msg.userId === userId
-                      ? "bg-green-500 text-white rounded-l-lg rounded-tr-lg"
-                      : "bg-white border rounded-r-lg rounded-tl-lg text-gray-800"
+                      ? "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg"
+                      : "bg-gray-100/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:border-[#a65fa8]/30 transition-all duration-300 hover:shadow-lg text-gray-800 dark:text-white"
                   } p-3 shadow`}
                 >
                   {msg.userId !== userId && (
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="text-xs font-semibold text-green-600">
+                      <div className="text-xs font-semibold text-[#a65fa8]">
                         {msg.userName}
                       </div>
                       <div
@@ -335,14 +338,16 @@ export default function Chat() {
                   ) : (
                     <div
                       className={
-                        msg.userId === userId ? "text-white" : "text-gray-800"
+                        msg.userId === userId
+                          ? "text-gray-900 dark:text-white"
+                          : "text-gray-900 dark:text-white"
                       }
                     >
                       {msg.text}
                     </div>
                   )}
                   <div
-                    className={`text-xs mt-2 ${msg.userId === userId ? "text-green-100" : "text-gray-500"}`}
+                    className={`text-xs mt-2 ${msg.userId === userId ? "text-green-700 dark:text-green-100" : "text-gray-500"}`}
                   >
                     {new Date(msg.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -355,7 +360,7 @@ export default function Chat() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="bg-white border-t p-4">
+          <div className="bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm shadow-md border-t border-gray-200 dark:border-gray-700 p-4 mx-auto w-full max-w-[769px]">
             <div className="flex gap-2 items-center">
               <input
                 type="file"
@@ -375,11 +380,11 @@ export default function Chat() {
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type a message..."
-                className="flex-1 border border-gray-300 px-4 py-2 rounded-full focus:outline-none focus:border-green-500"
+                className="my-2 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-[#a65fa8] focus:border-[#a65fa8] text-gray-900 dark:text-white"
               />
               <button
                 onClick={sendMessage}
-                className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full w-10 h-10 flex items-center justify-center"
+                className="text-white bg-gradient-to-r from-[#a65fa8] to-purple-600 hover:from-purple-600 hover:to-[#a65fa8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a65fa8] transition-colors p-2 rounded-full w-10 h-10 flex items-center justify-center"
               >
                 ➤
               </button>

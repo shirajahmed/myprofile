@@ -189,8 +189,9 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className} antialiased relative`}>
         <GravityMouseEffect />
         <div className="content-wrapper">
-          Ī{children}
-          <FloatingChatbotButton /> {/* Render FloatingChatbotButton here */}
+          {children}
+
+          <FloatingChatbotButton />
         </div>
       </body>
     </html>

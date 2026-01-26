@@ -1,16 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaComments, FaTimes } from "react-icons/fa";
 import Chatbot from "./Chatbot";
+import { usePathname } from "next/navigation";
 
 export default function FloatingChatbotButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const pathname = usePathname();
 
   const toggleChatbot = () => {
     setIsOpen(!isOpen);
   };
+
+  // Check if current path is /chat and hide the button
+  useEffect(() => {
+    // Hide the button if we're on the /chat page
+    if (pathname === "/chat") {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [pathname]);
+
+  // If not visible (on /chat page), don't render anything
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <>

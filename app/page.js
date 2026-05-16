@@ -79,6 +79,14 @@ export default function Home() {
         {/* Home Page Interactive Content */}
         <div className="col-span-12 lg:col-span-9">
           <MainContent>
+            {/* Cover Image Banner */}
+            <div className="w-full overflow-hidden">
+              <img
+                src="/images/coverpic.png"
+                alt="Building Fast. Building Smart. Building For Impact."
+                className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
+              />
+            </div>
             <motion.div
               className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
               variants={routeFade}

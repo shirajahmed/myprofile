@@ -192,8 +192,8 @@ export default function Calculators() {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-4">🧮 Advanced Calculators</h1>
-        <p className="text-gray-400">Professional calculators for health, finance, math, and daily utilities</p>
+        <h1 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">🧮 Advanced Calculators</h1>
+        <p className="text-gray-500 dark:text-gray-400">Professional calculators for health, finance, math, and daily utilities</p>
       </div>
 
       <div className="space-y-8">
@@ -201,13 +201,7 @@ export default function Calculators() {
           <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-2xl">
             <h2 className="text-2xl font-bold text-white mb-4">🎉 Special Calculator</h2>
             <button
-              onClick={() =>
-                handleButtonClick(
-                  "Sahil Calculator",
-                  () => ({ result: "🐰 ja beta kaaam daam kor" }),
-                  []
-                )
-              }
+              onClick={() => handleButtonClick("Sahil Calculator", () => ({ result: "🐰 ja beta kaaam daam kor" }), [])}
               className="px-6 py-3 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
             >
               Click me very softly
@@ -216,24 +210,18 @@ export default function Calculators() {
         )}
 
         {calculatorCategories.map((category, index) => (
-          <div key={index} className="bg-gray-800 p-6 rounded-2xl border border-gray-700">
-            <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-600 pb-3">
+          <div key={index} className="bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-600 pb-3">
               {category.heading}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {category.calculators.map((calculator, idx) => (
                 <button
                   key={idx}
-                  onClick={() =>
-                    handleButtonClick(
-                      calculator.title,
-                      calculator.onSubmit,
-                      calculator.inputs
-                    )
-                  }
-                  className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  onClick={() => handleButtonClick(calculator.title, calculator.onSubmit, calculator.inputs)}
+                  className="p-4 bg-gradient-to-br from-[#a65fa8] to-purple-600 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl transition-all duration-200 hover:scale-105 shadow-md font-semibold text-center"
                 >
-                  <div className="font-semibold text-center">{calculator.title}</div>
+                  {calculator.title}
                 </button>
               ))}
             </div>
@@ -242,12 +230,7 @@ export default function Calculators() {
       </div>
 
       {isModalOpen && (
-        <CalculatorModal
-          title={modalTitle}
-          onClose={closeModal}
-          onSubmit={modalInfo.onSubmit}
-          inputs={modalInfo.inputs}
-        />
+        <CalculatorModal title={modalTitle} onClose={closeModal} onSubmit={modalInfo.onSubmit} inputs={modalInfo.inputs} />
       )}
     </div>
   );

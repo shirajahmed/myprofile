@@ -1,149 +1,45 @@
-
-
 "use client";
+import Link from "next/link";
 
-import { useEffect } from "react";
+const tools = [
+  { href: "/tools/calculator", icon: "🧮", title: "Calculator", desc: "Advanced calculator with multiple functions" },
+  { href: "/tools/password-generator", icon: "🔐", title: "Password Generator", desc: "Generate strong, secure passwords" },
+  { href: "/tools/qr-generator", icon: "📱", title: "QR Generator", desc: "Create QR codes for text and URLs" },
+  { href: "/tools/color-generator", icon: "🎨", title: "Color Generator", desc: "Generate and explore color palettes" },
+  { href: "/tools/can-i-use-this-username", icon: "🔍", title: "Username Checker", desc: "Check username availability across platforms" },
+  { href: "/tools/get-your-info", icon: "💻", title: "Get Your Info", desc: "View your device and browser information" },
+  { href: "/tools/download-tools", icon: "⬇️", title: "Download Tools", desc: "Download media from popular platforms" },
+  { href: "/tools/text-diff", icon: "🔍", title: "Text Diff Checker", desc: "Compare two text blocks side by side" },
+  { href: "/tools/word-counter", icon: "📝", title: "Word Counter", desc: "Count words, characters and reading time" },
+  { href: "/tools/lorem-generator", icon: "📄", title: "Lorem Generator", desc: "Generate placeholder text" },
+  { href: "/tools/markdown-converter", icon: "✍️", title: "Markdown Converter", desc: "Convert Markdown to HTML with preview" },
+  { href: "/tools/case-converter", icon: "🔤", title: "Case Converter", desc: "Convert text between different cases" },
+  { href: "/tools/code-tools", icon: "🔧", title: "Code Tools", desc: "CSS/HTML/JS formatters & syntax highlighter", featured: true },
+];
 
 export default function ToolsPage() {
-  useEffect(() => {
-    // Initialize Google Ads
-    // (window.adsbygoogle = window.adsbygoogle || []).push({});
-  }, []);
-
   return (
-    <div className="grid grid-cols-12 gap-6 px-5 my-14 lg:mb-0 md:mb-16 sm:px-20 md:px-32 lg:px-36 xl:px-48 ">
-      {/* Sidebar */}
-      <div className="h-full col-span-12 p-4 text-base text-center bg-dark-500 lg:col-span-3 rounded-2xl shadow-custom-dark ">
-        {/* Ad container placeholder */}
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">All Tools</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">{tools.length} free tools for developers and designers</p>
       </div>
 
-      <div className="flex flex-col col-span-12 overflow-hidden shadow-custom-dark rounded-2xl lg:col-span-9 bg-dark-500">
-        {/* Navbar */}
-        <div className="flex items-center justify-between px-5 py-3 my-3 bg-[#18191d] rounded-xl">
-          <span className="text-xl font-bold border-b-4 md:text-2xl border-[#a65fa8] text-white">
-            All Tools
-          </span>
-        </div>
-
-        {/* Tools Grid */}
-        <div className="h-auto bg-[#0a0a0a] rounded-xl text-white p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Existing Tools */}
-            <a
-              href="/tools/calculator"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Calculator</h3>
-              <p className="text-gray-400">
-                Advanced calculator with multiple functions
-              </p>
-            </a>
-
-            <a
-              href="/tools/password-generator"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Password Generator</h3>
-              <p className="text-gray-400">Generate secure passwords</p>
-            </a>
-
-            <a
-              href="/tools/qr-generator"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">QR Generator</h3>
-              <p className="text-gray-400">Create QR codes for text and URLs</p>
-            </a>
-
-            <a
-              href="/tools/color-generator"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Color Generator</h3>
-              <p className="text-gray-400">
-                Generate and explore color palettes
-              </p>
-            </a>
-
-            <a
-              href="/tools/can-i-use-this-username"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Username Checker</h3>
-              <p className="text-gray-400">Check username availability</p>
-            </a>
-
-            <a
-              href="/tools/get-your-info"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Get Your Info</h3>
-              <p className="text-gray-400">View your system information</p>
-            </a>
-
-            <a
-              href="/tools/download-tools"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Download Tools</h3>
-              <p className="text-gray-400">Download utilities and tools</p>
-            </a>
-
-            {/* New Text & Content Tools */}
-            <a
-              href="/tools/text-diff"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Text Diff Checker</h3>
-              <p className="text-gray-400">Compare two text blocks</p>
-            </a>
-
-            <a
-              href="/tools/word-counter"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Word Counter</h3>
-              <p className="text-gray-400">Count words, characters & more</p>
-            </a>
-
-            <a
-              href="/tools/lorem-generator"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Lorem Generator</h3>
-              <p className="text-gray-400">Generate placeholder text</p>
-            </a>
-
-            <a
-              href="/tools/markdown-converter"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Markdown Converter</h3>
-              <p className="text-gray-400">Convert Markdown to HTML</p>
-            </a>
-
-            <a
-              href="/tools/case-converter"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors"
-            >
-              <h3 className="text-xl font-bold mb-2">Case Converter</h3>
-              <p className="text-gray-400">
-                Convert text between different cases
-              </p>
-            </a>
-
-            {/* Code Tools Category */}
-            <a
-              href="/tools/code-tools"
-              className="bg-[#18191d] p-6 rounded-lg shadow-xl hover:bg-[#252529] transition-colors border-2 border-blue-500"
-            >
-              <h3 className="text-xl font-bold mb-2">🔧 Code Tools</h3>
-              <p className="text-gray-400">
-                CSS/HTML/JS formatters & syntax highlighter
-              </p>
-            </a>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tools.map(({ href, icon, title, desc, featured }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm p-5 rounded-xl border transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 group
+              ${featured
+                ? "border-[#a65fa8] dark:border-[#a65fa8]"
+                : "border-gray-200 dark:border-gray-700"}`}
+          >
+            <div className="text-2xl mb-3">{icon}</div>
+            <h3 className="font-semibold text-gray-800 dark:text-white group-hover:text-[#a65fa8] transition-colors">{title}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{desc}</p>
+          </Link>
+        ))}
       </div>
     </div>
   );

@@ -35,25 +35,22 @@ const codeTools = [
 
 export default function CodeToolsPage() {
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Code Tools</h1>
-      <p className="text-gray-600 mb-8">
-        Professional code formatting, minification, and syntax highlighting tools for developers.
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">🔧 Code Tools</h1>
+      <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+        Professional code formatting, minification, and syntax highlighting tools.
       </p>
-      
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         {codeTools.map((tool, index) => (
           <Link
             key={index}
             href={tool.href}
-            className="block p-6 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            className="flex items-start gap-4 p-5 bg-white/80 dark:bg-[#18191d]/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
           >
-            <div className="flex items-start space-x-4">
-              <div className="text-3xl">{tool.icon}</div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">{tool.title}</h3>
-                <p className="text-gray-600">{tool.description}</p>
-              </div>
+            <div className="text-3xl">{tool.icon}</div>
+            <div>
+              <h3 className="font-semibold text-gray-800 dark:text-white group-hover:text-[#a65fa8] transition-colors">{tool.title}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{tool.description}</p>
             </div>
           </Link>
         ))}

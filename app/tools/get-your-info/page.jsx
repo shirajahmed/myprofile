@@ -1,6 +1,7 @@
 
 
 "use client";
+import ToolPageWrapper from "../../components/ToolPageWrapper";
 
 import { useState, useEffect } from "react";
 
@@ -150,21 +151,15 @@ export default function GetYourInfo() {
     }
 
     return (
-      <div className="space-y-3">
+      <div className="space-y-2">
         {Object.entries(data).map(([key, value]) => (
-          <div key={key} className="flex justify-between items-center p-3 bg-gray-700 rounded-lg">
-            <span className="text-gray-300 capitalize font-medium">
-              {key.replace(/([A-Z])/g, ' $1').trim()}:
+          <div key={key} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <span className="text-gray-600 dark:text-gray-300 capitalize text-sm">
+              {key.replace(/([A-Z])/g, ' $1').trim()}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-white font-mono text-sm">{value}</span>
-              <button
-                onClick={() => copyToClipboard(String(value))}
-                className="p-1 text-gray-400 hover:text-white transition-colors"
-                title="Copy"
-              >
-                📋
-              </button>
+              <span className="text-gray-800 dark:text-white font-mono text-sm">{value}</span>
+              <button onClick={() => copyToClipboard(String(value))} className="text-gray-400 hover:text-[#a65fa8] transition-colors text-xs">📋</button>
             </div>
           </div>
         ))}
@@ -174,81 +169,65 @@ export default function GetYourInfo() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-              <p className="text-white">Collecting system information...</p>
-            </div>
+      <ToolPageWrapper title="💻 System Information" description="View your device, browser and network details">
+        <div className="flex items-center justify-center h-48">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#a65fa8] mx-auto mb-3"></div>
+            <p className="text-gray-500 dark:text-gray-400">Collecting system information...</p>
           </div>
         </div>
-      </div>
+      </ToolPageWrapper>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">
-            ℹ️ System Information
-          </h1>
+    <ToolPageWrapper title="💻 System Information" description="View your device, browser and network details">
+      <div className="space-y-5">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-wrap gap-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-[#a65fa8] text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={copyAllInfo}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-medium transition-colors"
+            className="px-3 py-1.5 bg-[#a65fa8] hover:bg-purple-700 rounded-lg text-white text-sm font-medium transition-colors"
           >
             📋 Copy All
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
+        <div className="space-y-2">
+          {activeTab === 'device' && renderInfoSection(systemInfo.device)}
+          {activeTab === 'screen' && renderInfoSection(systemInfo.screen)}
+          {activeTab === 'browser' && renderInfoSection(systemInfo.browser)}
+          {activeTab === 'network' && renderInfoSection(systemInfo.network)}
+          {activeTab === 'location' && renderInfoSection(systemInfo.location)}
+          {activeTab === 'battery' && renderInfoSection(systemInfo.battery)}
         </div>
 
-        {/* Content */}
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          {activeTab === 'device' && renderInfoSection(systemInfo.device, 'Device Information')}
-          {activeTab === 'screen' && renderInfoSection(systemInfo.screen, 'Screen Information')}
-          {activeTab === 'browser' && renderInfoSection(systemInfo.browser, 'Browser Information')}
-          {activeTab === 'network' && renderInfoSection(systemInfo.network, 'Network Information')}
-          {activeTab === 'location' && renderInfoSection(systemInfo.location, 'Location Information')}
-          {activeTab === 'battery' && renderInfoSection(systemInfo.battery, 'Battery Information')}
-        </div>
+        <button
+          onClick={collectSystemInfo}
+          className="w-full py-3 bg-[#a65fa8] hover:bg-purple-700 rounded-lg text-white font-medium transition-colors"
+        >
+          🔄 Refresh Information
+        </button>
 
-        {/* Refresh Button */}
-        <div className="mt-8 text-center">
-          <button
-            onClick={collectSystemInfo}
-            className="px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-lg text-white font-semibold transition-all duration-300"
-          >
-            🔄 Refresh Information
-          </button>
-        </div>
-
-        {/* Privacy Note */}
-        <div className="mt-8 p-4 bg-gray-700/50 rounded-lg">
-          <h3 className="text-white font-semibold mb-2">🔒 Privacy Note:</h3>
-          <p className="text-gray-300 text-sm">
-            All information is collected locally in your browser. No data is sent to external servers 
-            except for the public IP address lookup. Location data requires your explicit permission.
-          </p>
-        </div>
+        <p className="text-xs text-gray-400 dark:text-gray-500">
+          🔒 All data is collected locally. No information is sent to external servers except for IP lookup.
+        </p>
       </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

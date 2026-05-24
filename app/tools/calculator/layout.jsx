@@ -62,15 +62,5 @@ const jsonLdData = {
 };
 
 export default function Layout({ children }) {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
-      />
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-        {children}
-      </div>
-    </>
-  );
+  return <>{children}</>;
 }

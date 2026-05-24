@@ -1,112 +1,67 @@
-
-
 'use client';
 import { useState } from 'react';
+import ToolPageWrapper from '../../components/ToolPageWrapper';
 
 export default function MarkdownConverter() {
-  const [markdown, setMarkdown] = useState('# Hello World\n\nThis is **bold** and this is *italic*.\n\n- List item 1\n- List item 2\n\n[Link](https://example.com)');
-  const [html, setHtml] = useState('');
+  const [markdown, setMarkdown] = useState('# Hello World\n\nThis is **bold** and *italic*.\n\n- Item 1\n- Item 2\n\n[Link](https://example.com)');
+  const [copied, setCopied] = useState(false);
 
-  const convertToHtml = (md) => {
-    let result = md
-      // Headers
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      // Bold
-      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-      // Italic
-      .replace(/\*(.*)\*/gim, '<em>$1</em>')
-      // Code
-      .replace(/`(.*)`/gim, '<code>$1</code>')
-      // Links
-      .replace(/\[([^\]]*)\]\(([^\)]*)\)/gim, '<a href="$2">$1</a>')
-      // Line breaks
-      .replace(/\n$/gim, '<br />')
-      // Lists
-      .replace(/^\* (.*$)/gim, '<li>$1</li>')
-      .replace(/^\- (.*$)/gim, '<li>$1</li>')
-      // Paragraphs
-      .replace(/\n\n/gim, '</p><p>')
-      .replace(/^(?!<[h|l|p])/gim, '<p>')
-      .replace(/(?![h|l|p]>)$/gim, '</p>');
+  const toHtml = (md) => md
+    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold mt-3 mb-1">$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-4 mb-2">$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>')
+    .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+    .replace(/`(.*?)`/gim, '<code class="bg-gray-100 px-1 rounded text-sm font-mono">$1</code>')
+    .replace(/\[([^\]]*)\]\(([^)]*)\)/gim, '<a href="$2" class="text-[#a65fa8] underline">$1</a>')
+    .replace(/^\- (.*$)/gim, '<li class="ml-4 list-disc">$1</li>')
+    .replace(/\n\n/gim, '</p><p class="mb-2">')
+    .replace(/^(?!<[hlp])/gim, '<p class="mb-2">')
+    .replace(/(?<![>])$/gim, '</p>');
 
-    // Wrap lists
-    result = result.replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>');
-    
-    setHtml(result);
-  };
+  const html = toHtml(markdown);
 
-  const handleMarkdownChange = (value) => {
-    setMarkdown(value);
-    convertToHtml(value);
-  };
-
-  const copyHtml = () => {
+  const copy = () => {
     navigator.clipboard.writeText(html);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
-
-  // Initialize conversion
-  useState(() => {
-    convertToHtml(markdown);
-  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">Markdown to HTML Converter</h1>
-        
-        <div className="grid md:grid-cols-2 gap-6">
+    <ToolPageWrapper title="📝 Markdown Converter" description="Convert Markdown to HTML with live preview">
+      <div className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-medium">Markdown Input</label>
-            </div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Markdown Input</label>
             <textarea
               value={markdown}
-              onChange={(e) => handleMarkdownChange(e.target.value)}
-              className="w-full h-96 p-4 bg-gray-800 border border-gray-700 rounded-lg font-mono text-sm"
-              placeholder="Enter your markdown here..."
+              onChange={(e) => setMarkdown(e.target.value)}
+              className="w-full h-64 p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white font-mono text-sm resize-none focus:ring-2 focus:ring-[#a65fa8] focus:outline-none"
             />
           </div>
-          
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-sm font-medium">HTML Output</label>
-              <button
-                onClick={copyHtml}
-                className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
-              >
-                Copy HTML
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">HTML Output</label>
+              <button onClick={copy} className="px-3 py-1 bg-[#a65fa8] hover:bg-purple-700 text-white text-xs rounded transition-colors">
+                {copied ? '✓ Copied!' : 'Copy HTML'}
               </button>
             </div>
             <textarea
               value={html}
               readOnly
-              className="w-full h-96 p-4 bg-gray-800 border border-gray-700 rounded-lg font-mono text-sm"
-              placeholder="HTML output will appear here..."
+              className="w-full h-64 p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white font-mono text-sm resize-none"
             />
           </div>
         </div>
 
-        <div className="mt-6 bg-gray-800 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4">Preview</h3>
-          <div 
-            className="bg-white text-black p-4 rounded-lg prose max-w-none"
+        <div>
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview</h3>
+          <div
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 p-4 rounded-lg text-gray-800 dark:text-gray-200 prose dark:prose-invert max-w-none text-sm"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
-
-        <div className="mt-6 bg-gray-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-2">Supported Markdown</h3>
-          <div className="text-sm text-gray-400 space-y-1">
-            <div># Header 1, ## Header 2, ### Header 3</div>
-            <div>**bold text**, *italic text*</div>
-            <div>`inline code`</div>
-            <div>[link text](url)</div>
-            <div>- list item or * list item</div>
-          </div>
-        </div>
       </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

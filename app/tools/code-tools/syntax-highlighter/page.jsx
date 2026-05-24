@@ -2,6 +2,7 @@
 
 'use client';
 import { useState } from 'react';
+import ToolPageWrapper from '../../../components/ToolPageWrapper';
 
 export default function SyntaxHighlighter() {
   const [input, setInput] = useState('');
@@ -49,67 +50,45 @@ export default function SyntaxHighlighter() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Code Syntax Highlighter</h1>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Language:</label>
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="px-3 py-2 border rounded-lg"
-        >
-          <option value="javascript">JavaScript</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-        </select>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
+    <ToolPageWrapper title="🌈 Code Syntax Highlighter" description="Highlight code syntax and generate HTML output">
+      <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Input Code:</label>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="w-full h-64 p-3 border rounded-lg font-mono text-sm"
-            placeholder="Paste your code here..."
-          />
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language:</label>
+          <select value={language} onChange={(e) => setLanguage(e.target.value)}
+            className="px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white text-sm focus:ring-2 focus:ring-[#a65fa8] focus:outline-none">
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+          </select>
         </div>
-        
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Input Code:</label>
+            <textarea value={input} onChange={(e) => setInput(e.target.value)}
+              className="w-full h-64 p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg font-mono text-sm text-gray-800 dark:text-white resize-none focus:ring-2 focus:ring-[#a65fa8] focus:outline-none"
+              placeholder="Paste your code here..." />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Highlighted Preview:</label>
+            <div className="w-full h-64 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg font-mono text-sm overflow-auto"
+              dangerouslySetInnerHTML={{ __html: output || '<span class="text-gray-400">Highlighted code will appear here...</span>' }} />
+          </div>
+        </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Highlighted Output:</label>
-          <div 
-            className="w-full h-64 p-3 border rounded-lg font-mono text-sm bg-gray-50 overflow-auto"
-            dangerouslySetInnerHTML={{ __html: output || 'Highlighted code will appear here...' }}
-          />
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">HTML Output:</label>
+          <textarea value={output} readOnly
+            className="w-full h-24 p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg font-mono text-sm text-gray-800 dark:text-white resize-none" />
+        </div>
+        <div className="flex gap-3">
+          <button onClick={handleHighlight} className="px-5 py-2 bg-[#a65fa8] hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors">
+            Highlight Syntax
+          </button>
+          <button onClick={copyHTML} disabled={!output}
+            className="px-5 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
+            Copy HTML
+          </button>
         </div>
       </div>
-
-      <div className="mt-6">
-        <label className="block text-sm font-medium mb-2">HTML Output:</label>
-        <textarea
-          value={output}
-          readOnly
-          className="w-full h-32 p-3 border rounded-lg font-mono text-sm bg-gray-50"
-          placeholder="HTML with syntax highlighting will appear here..."
-        />
-      </div>
-
-      <div className="flex gap-4 mt-6">
-        <button
-          onClick={handleHighlight}
-          className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Highlight Syntax
-        </button>
-        <button
-          onClick={copyHTML}
-          disabled={!output}
-          className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
-        >
-          Copy HTML
-        </button>
-      </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

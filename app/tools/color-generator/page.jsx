@@ -4,6 +4,8 @@
 
 import { useState } from "react";
 
+import ToolPageWrapper from "../../components/ToolPageWrapper";
+
 export default function ColorGenerator() {
   const [selectedColor, setSelectedColor] = useState("#3b82f6");
   const [opacity, setOpacity] = useState(100);
@@ -102,138 +104,70 @@ export default function ColorGenerator() {
   const palette = generatePalette();
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">
-          🎨 Color Generator & Palette
-        </h1>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Color Picker Section */}
-          <div className="space-y-6">
-            {/* Main Color Display */}
+    <ToolPageWrapper title="🎨 Color Generator & Palette" description="Pick colors and get all formats instantly">
+      <div className="grid lg:grid-cols-2 gap-8">
+          {/* Color Picker */}
+          <div className="space-y-5">
             <div className="text-center">
-              <div
-                className="w-48 h-48 mx-auto rounded-2xl shadow-2xl border-4 border-gray-600 mb-4"
-                style={{ backgroundColor: `rgba(${r}, ${g}, ${b}, ${alphaDecimal})` }}
-              />
-              
+              <div className="w-40 h-40 mx-auto rounded-2xl shadow-lg border border-gray-200 dark:border-gray-600 mb-4"
+                style={{ backgroundColor: `rgba(${r}, ${g}, ${b}, ${alphaDecimal})` }} />
               <div className="flex gap-3 justify-center">
-                <input
-                  type="color"
-                  value={selectedColor}
-                  onChange={(e) => setSelectedColor(e.target.value)}
-                  className="w-16 h-12 rounded-lg cursor-pointer border-2 border-gray-600"
-                />
-                <button
-                  onClick={generateRandomColor}
-                  className="px-4 py-2 bg-purple-500 hover:bg-purple-600 rounded-lg text-white font-medium transition-colors"
-                >
+                <input type="color" value={selectedColor} onChange={(e) => setSelectedColor(e.target.value)}
+                  className="w-14 h-10 rounded-lg cursor-pointer border border-gray-300 dark:border-gray-600" />
+                <button onClick={generateRandomColor}
+                  className="px-4 py-2 bg-[#a65fa8] hover:bg-purple-700 rounded-lg text-white font-medium transition-colors">
                   Random
                 </button>
               </div>
             </div>
 
-            {/* Opacity Slider */}
             <div>
-              <div className="flex justify-between mb-3">
-                <label className="text-white font-medium">Opacity</label>
-                <span className="text-blue-400 font-semibold">{opacity}%</span>
+              <div className="flex justify-between mb-2">
+                <label className="text-gray-700 dark:text-gray-300 font-medium">Opacity</label>
+                <span className="text-[#a65fa8] font-semibold">{opacity}%</span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={opacity}
-                onChange={(e) => setOpacity(Number(e.target.value))}
-                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-              />
+              <input type="range" min="0" max="100" value={opacity} onChange={(e) => setOpacity(Number(e.target.value))}
+                className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer" />
             </div>
 
-            {/* Color Palette */}
             <div>
-              <h3 className="text-white font-semibold mb-3">Color Palette</h3>
+              <h3 className="text-gray-700 dark:text-gray-300 font-medium mb-2">Palette</h3>
               <div className="grid grid-cols-5 gap-2">
-                {palette.map((color, index) => (
-                  <div
-                    key={index}
-                    className="aspect-square rounded-lg cursor-pointer border-2 border-gray-600 hover:scale-105 transition-transform"
-                    style={{ backgroundColor: color }}
-                    onClick={() => setSelectedColor(color)}
-                    title={color}
-                  />
+                {palette.map((color, i) => (
+                  <div key={i} className="aspect-square rounded-lg cursor-pointer border border-gray-200 dark:border-gray-600 hover:scale-105 transition-transform"
+                    style={{ backgroundColor: color }} onClick={() => setSelectedColor(color)} title={color} />
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Color Formats Section */}
-          <div className="space-y-4">
-            <h3 className="text-white font-semibold text-xl mb-4">Color Formats</h3>
-            
+          {/* Formats */}
+          <div className="space-y-3">
+            <h3 className="text-gray-700 dark:text-gray-300 font-medium">Color Formats</h3>
             {colorFormats.map((format) => (
-              <div key={format.name} className="bg-gray-700 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-white font-medium">{format.name}</span>
-                  <button
-                    onClick={() => copyToClipboard(format.value, format.name)}
-                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded text-white text-sm transition-colors"
-                  >
+              <div key={format.name} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-gray-700 dark:text-gray-200 font-medium text-sm">{format.name}</span>
+                  <button onClick={() => copyToClipboard(format.value, format.name)}
+                    className="px-3 py-1 bg-[#a65fa8] hover:bg-purple-700 rounded text-white text-xs transition-colors">
                     {copiedFormat === format.name ? "✓ Copied!" : "Copy"}
                   </button>
                 </div>
-                <div className="text-gray-300 font-mono text-sm bg-gray-800 p-2 rounded">
+                <div className="bg-white dark:bg-gray-800 p-2 rounded font-mono text-xs text-gray-700 dark:text-gray-300">
                   {format.value}
                 </div>
               </div>
             ))}
 
-            {/* Color Information */}
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <h4 className="text-white font-medium mb-3">Color Information</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Hue:</span>
-                  <span className="text-white">{h}°</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Saturation:</span>
-                  <span className="text-white">{s}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Lightness:</span>
-                  <span className="text-white">{l}%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-300">Brightness:</span>
-                  <span className="text-white">{Math.round((r * 299 + g * 587 + b * 114) / 1000)}</span>
-                </div>
+            <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+              <h4 className="text-gray-700 dark:text-gray-200 font-medium mb-2 text-sm">Accessibility Preview</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-3 rounded-lg text-sm" style={{ backgroundColor: selectedColor, color: '#fff' }}>White text</div>
+                <div className="p-3 rounded-lg text-sm" style={{ backgroundColor: selectedColor, color: '#000' }}>Black text</div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Accessibility Preview */}
-        <div className="mt-8 p-6 bg-gray-700/50 rounded-lg">
-          <h3 className="text-white font-semibold mb-4">Accessibility Preview</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div
-              className="p-4 rounded-lg"
-              style={{ backgroundColor: selectedColor, color: '#ffffff' }}
-            >
-              <p className="font-semibold">White text on color</p>
-              <p className="text-sm">Sample text for contrast testing</p>
-            </div>
-            <div
-              className="p-4 rounded-lg"
-              style={{ backgroundColor: selectedColor, color: '#000000' }}
-            >
-              <p className="font-semibold">Black text on color</p>
-              <p className="text-sm">Sample text for contrast testing</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

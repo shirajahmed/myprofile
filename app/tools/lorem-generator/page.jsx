@@ -1,118 +1,87 @@
-
-
 'use client';
 import { useState } from 'react';
+import ToolPageWrapper from '../../components/ToolPageWrapper';
+
+const WORDS = ['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit','voluptate','velit','esse','cillum','fugiat','nulla','pariatur'];
+
+const rnd = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const sentence = () => { const w = Array.from({ length: Math.floor(Math.random()*10)+5 }, () => rnd(WORDS)); w[0] = w[0][0].toUpperCase() + w[0].slice(1); return w.join(' ') + '.'; };
+const paragraph = () => Array.from({ length: Math.floor(Math.random()*4)+3 }, sentence).join(' ');
 
 export default function LoremGenerator() {
   const [type, setType] = useState('paragraphs');
   const [count, setCount] = useState(3);
   const [generated, setGenerated] = useState('');
-
-  const loremWords = [
-    'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-    'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-    'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-    'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-    'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-    'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-    'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-    'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'
-  ];
-
-  const generateWord = () => loremWords[Math.floor(Math.random() * loremWords.length)];
-  
-  const generateSentence = () => {
-    const length = Math.floor(Math.random() * 10) + 5;
-    const words = Array.from({ length }, generateWord);
-    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
-    return words.join(' ') + '.';
-  };
-
-  const generateParagraph = () => {
-    const sentences = Math.floor(Math.random() * 5) + 3;
-    return Array.from({ length: sentences }, generateSentence).join(' ');
-  };
+  const [copied, setCopied] = useState(false);
 
   const generate = () => {
-    let result = '';
-    
-    switch (type) {
-      case 'words':
-        result = Array.from({ length: count }, generateWord).join(' ');
-        break;
-      case 'sentences':
-        result = Array.from({ length: count }, generateSentence).join(' ');
-        break;
-      case 'paragraphs':
-        result = Array.from({ length: count }, generateParagraph).join('\n\n');
-        break;
-    }
-    
+    const result = type === 'words'
+      ? Array.from({ length: count }, () => rnd(WORDS)).join(' ')
+      : type === 'sentences'
+      ? Array.from({ length: count }, sentence).join(' ')
+      : Array.from({ length: count }, paragraph).join('\n\n');
     setGenerated(result);
   };
 
-  const copyToClipboard = () => {
+  const copy = () => {
     navigator.clipboard.writeText(generated);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center">Lorem Ipsum Generator</h1>
-        
-        <div className="bg-gray-800 p-6 rounded-lg mb-6">
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Type</label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg"
-              >
-                <option value="words">Words</option>
-                <option value="sentences">Sentences</option>
-                <option value="paragraphs">Paragraphs</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Count</label>
-              <input
-                type="number"
-                value={count}
-                onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
-                min="1"
-                max="100"
-                className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg"
-              />
-            </div>
-            <div className="flex items-end">
-              <button
-                onClick={generate}
-                className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium"
-              >
-                Generate
-              </button>
-            </div>
+    <ToolPageWrapper title="📄 Lorem Ipsum Generator" description="Generate placeholder text for your designs">
+      <div className="space-y-4">
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white focus:ring-2 focus:ring-[#a65fa8] focus:outline-none"
+            >
+              <option value="words">Words</option>
+              <option value="sentences">Sentences</option>
+              <option value="paragraphs">Paragraphs</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Count</label>
+            <input
+              type="number"
+              value={count}
+              onChange={(e) => setCount(Math.max(1, parseInt(e.target.value) || 1))}
+              min="1" max="100"
+              className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white focus:ring-2 focus:ring-[#a65fa8] focus:outline-none"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={generate}
+              className="w-full py-3 bg-[#a65fa8] hover:bg-purple-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Generate
+            </button>
           </div>
         </div>
 
         {generated && (
-          <div className="bg-gray-800 rounded-lg p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Generated Text</h3>
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Generated Text</span>
               <button
-                onClick={copyToClipboard}
-                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm"
+                onClick={copy}
+                className="px-4 py-1.5 bg-[#a65fa8] hover:bg-purple-700 text-white text-sm rounded-lg transition-colors"
               >
-                Copy to Clipboard
+                {copied ? '✓ Copied!' : 'Copy'}
               </button>
             </div>
-            <div className="bg-gray-900 p-4 rounded-lg">
-              <p className="whitespace-pre-wrap font-mono text-sm">{generated}</p>
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <p className="whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-200">{generated}</p>
             </div>
           </div>
         )}
       </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

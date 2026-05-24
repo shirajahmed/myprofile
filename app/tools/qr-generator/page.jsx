@@ -5,6 +5,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 
+import ToolPageWrapper from "../../components/ToolPageWrapper";
+
 export default function QRGenerator() {
   const [text, setText] = useState("https://example.com");
   const [qrSize, setQrSize] = useState(300);
@@ -91,24 +93,17 @@ export default function QRGenerator() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 border border-gray-700">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">
-          📱 QR Code Generator
-        </h1>
-
-        <div className="grid lg:grid-cols-2 gap-8">
+    <ToolPageWrapper title="📱 QR Code Generator" description="Generate customizable QR codes for any URL or text">
+      <div className="grid lg:grid-cols-2 gap-8">
           {/* Controls Section */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* Content Input */}
             <div>
-              <label className="block text-white font-medium mb-3">
-                Content (URL/Text):
-              </label>
+              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Content (URL/Text):</label>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-[#a65fa8] focus:outline-none resize-none"
                 placeholder="Enter text, URL, email, phone number..."
                 rows={3}
               />
@@ -116,15 +111,13 @@ export default function QRGenerator() {
 
             {/* Quick Presets */}
             <div>
-              <label className="block text-white font-medium mb-3">
-                Quick Presets:
-              </label>
+              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Quick Presets:</label>
               <div className="grid grid-cols-2 gap-2">
                 {presetTexts.map((preset, index) => (
                   <button
                     key={index}
                     onClick={() => setText(preset.value)}
-                    className="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-sm transition-colors"
+                    className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-gray-700 dark:text-gray-200 text-sm transition-colors"
                   >
                     {preset.label}
                   </button>
@@ -134,71 +127,37 @@ export default function QRGenerator() {
 
             {/* Size Control */}
             <div>
-              <div className="flex justify-between mb-3">
-                <label className="text-white font-medium">QR Code Size</label>
-                <span className="text-blue-400 font-semibold">{qrSize}px</span>
+              <div className="flex justify-between mb-2">
+                <label className="text-gray-700 dark:text-gray-300 font-medium">QR Code Size</label>
+                <span className="text-[#a65fa8] font-semibold">{qrSize}px</span>
               </div>
               <input
-                type="range"
-                min="200"
-                max="800"
-                value={qrSize}
+                type="range" min="200" max="800" value={qrSize}
                 onChange={(e) => setQrSize(Number(e.target.value))}
-                className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
               />
             </div>
 
             {/* Color Controls */}
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-white font-medium mb-3">
-                  Foreground Color:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="color"
-                    value={fgColor}
-                    onChange={(e) => setFgColor(e.target.value)}
-                    className="w-12 h-12 rounded-lg cursor-pointer border-2 border-gray-600"
-                  />
-                  <input
-                    type="text"
-                    value={fgColor}
-                    onChange={(e) => setFgColor(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm"
-                  />
+              {[{ label: 'Foreground', val: fgColor, set: setFgColor }, { label: 'Background', val: bgColor, set: setBgColor }].map(({ label, val, set }) => (
+                <div key={label}>
+                  <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">{label}:</label>
+                  <div className="flex gap-2">
+                    <input type="color" value={val} onChange={(e) => set(e.target.value)} className="w-12 h-10 rounded-lg cursor-pointer border border-gray-300 dark:border-gray-600" />
+                    <input type="text" value={val} onChange={(e) => set(e.target.value)} className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white text-sm" />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-white font-medium mb-3">
-                  Background Color:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="color"
-                    value={bgColor}
-                    onChange={(e) => setBgColor(e.target.value)}
-                    className="w-12 h-12 rounded-lg cursor-pointer border-2 border-gray-600"
-                  />
-                  <input
-                    type="text"
-                    value={bgColor}
-                    onChange={(e) => setBgColor(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm"
-                  />
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Error Correction */}
             <div>
-              <label className="block text-white font-medium mb-3">
-                Error Correction Level:
-              </label>
+              <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Error Correction:</label>
               <select
                 value={errorLevel}
                 onChange={(e) => setErrorLevel(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-white focus:ring-2 focus:ring-[#a65fa8] focus:outline-none"
               >
                 <option value="L">Low (7% recovery)</option>
                 <option value="M">Medium (15% recovery)</option>
@@ -209,71 +168,44 @@ export default function QRGenerator() {
           </div>
 
           {/* Preview Section */}
-          <div className="flex flex-col items-center space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-2xl">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="bg-white p-4 rounded-xl shadow border border-gray-200">
               {qrDataURL ? (
-                <img
-                  src={qrDataURL}
-                  alt="Generated QR Code"
-                  className="max-w-full h-auto"
-                  style={{ width: Math.min(qrSize, 400) }}
-                />
+                <img src={qrDataURL} alt="Generated QR Code" className="max-w-full h-auto" style={{ width: Math.min(qrSize, 300) }} />
               ) : (
-                <div 
-                  className="flex items-center justify-center bg-gray-200 rounded-lg"
-                  style={{ width: 300, height: 300 }}
-                >
-                  <span className="text-gray-500">QR Code Preview</span>
+                <div className="flex items-center justify-center bg-gray-100 rounded-lg w-64 h-64">
+                  <span className="text-gray-400 text-sm">QR Code Preview</span>
                 </div>
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-4 w-full">
+            <div className="flex gap-3 w-full">
               <button
                 onClick={downloadQR}
                 disabled={!qrDataURL}
-                className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors text-white font-semibold"
+                className="flex-1 px-4 py-3 bg-[#a65fa8] hover:bg-purple-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg text-white font-semibold transition-colors"
               >
-                📥 Download PNG
+                📥 Download
               </button>
               <button
                 onClick={copyQR}
                 disabled={!qrDataURL}
-                className="flex-1 px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors text-white font-semibold"
+                className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:cursor-not-allowed rounded-lg text-gray-700 dark:text-white font-semibold transition-colors"
               >
                 {copied ? "✓ Copied!" : "📋 Copy"}
               </button>
             </div>
 
-            {/* QR Info */}
             {text && (
-              <div className="w-full p-4 bg-gray-700/50 rounded-lg">
-                <h4 className="text-white font-medium mb-2">QR Code Info:</h4>
-                <div className="text-sm text-gray-300 space-y-1">
-                  <div>Content Length: {text.length} characters</div>
-                  <div>Size: {qrSize}×{qrSize} pixels</div>
-                  <div>Error Correction: {errorLevel}</div>
-                </div>
+              <div className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                <div>Length: {text.length} chars</div>
+                <div>Size: {qrSize}×{qrSize}px</div>
+                <div>Error Correction: {errorLevel}</div>
               </div>
             )}
           </div>
         </div>
-
-        {/* Hidden canvas for download functionality */}
         <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-        {/* Tips */}
-        <div className="mt-8 p-4 bg-gray-700/50 rounded-lg">
-          <h3 className="text-white font-semibold mb-2">💡 QR Code Tips:</h3>
-          <ul className="text-gray-300 text-sm space-y-1">
-            <li>• Higher error correction allows more damage tolerance</li>
-            <li>• Use high contrast colors for better readability</li>
-            <li>• Test your QR code with different scanners</li>
-            <li>• Keep URLs short for simpler QR codes</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    </ToolPageWrapper>
   );
 }

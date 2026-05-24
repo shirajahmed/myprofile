@@ -1,3 +1,5 @@
+import SiteHeader from "../components/SiteHeader";
+
 export const metadata = {
   title: "Online Developer Tools - Free Web Utilities",
   description:
@@ -26,41 +28,8 @@ export const metadata = {
 export default function ToolsLayout({ children }) {
   return (
     <>
-      {children}
-
-      {/* Structured Data for Tools */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            name: "Developer Tools Suite",
-            description: "Free online tools for developers and designers",
-            url: "https://shirajahmed.com/tools",
-            applicationCategory: "DeveloperApplication",
-            operatingSystem: "Web Browser",
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "USD",
-            },
-            author: {
-              "@type": "Person",
-              name: "Shiraj Ahmed",
-            },
-            featureList: [
-              "Password Generator",
-              "QR Code Generator",
-              "Color Generator",
-              "Calculator Suite",
-              "Text Utilities",
-              "Code Formatters",
-              "Social Media Downloader",
-            ],
-          }),
-        }}
-      />
+      <SiteHeader />
+      <main className="pt-16 min-h-screen">{children}</main>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import SiteHeader from "../components/SiteHeader";
+
 export const metadata = {
   title: "Anonymous Chat - Connect Instantly",
   description:
@@ -9,14 +11,7 @@ export const metadata = {
     description:
       "Connect with others anonymously in instant chat rooms. Private and secure messaging for everyone.",
     url: "https://shirajahmed.com/chat",
-    images: [
-      {
-        url: "https://shirajahmed.com/og-image-chat.jpg", // Create a specific OG image for chat
-        width: 1200,
-        height: 630,
-        alt: "Anonymous Chat",
-      },
-    ],
+    images: [{ url: "https://shirajahmed.com/og-image-chat.jpg", width: 1200, height: 630, alt: "Anonymous Chat" }],
     locale: "en_US",
     type: "website",
   },
@@ -24,50 +19,18 @@ export const metadata = {
     card: "summary_large_image",
     site: "@shirajahmed",
     title: "Anonymous Chat - Connect Instantly",
-    description:
-      "Join anonymous chat rooms and connect with people instantly. Your privacy is our priority.",
-    image: "https://shirajahmed.com/og-image-chat.jpg", // Create a specific OG image for chat
+    description: "Join anonymous chat rooms and connect with people instantly. Your privacy is our priority.",
+    image: "https://shirajahmed.com/og-image-chat.jpg",
     creator: "@shirajahmed",
   },
-  alternates: {
-    canonical: "https://shirajahmed.com/chat",
-  },
-};
-
-const jsonLdData = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: "Anonymous Chat",
-  url: "https://shirajahmed.com/chat",
-  description:
-    "Free online platform for anonymous instant messaging and creating private chat rooms.",
-  applicationCategory: "SocialNetworking",
-  operatingSystem: "Web Browser",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
-  author: {
-    "@type": "Person",
-    name: "Shiraj Ahmed", // Or a generic app name if preferred
-  },
-  featureList: [
-    "Anonymous Messaging",
-    "Instant Chat Rooms",
-    "Private Conversations",
-    "Secure Communication",
-  ],
+  alternates: { canonical: "https://shirajahmed.com/chat" },
 };
 
 export default function ChatLayout({ children }) {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
-      />
-      {children}
+      <SiteHeader />
+      <main className="pt-16 min-h-screen">{children}</main>
     </>
   );
 }

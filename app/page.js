@@ -15,6 +15,7 @@ import DevQuizSection from "./components/DevQuizSection";
 import FakeTerminal from "./components/FakeTerminal";
 import ComplimentGenerator from "./components/ComplimentGenerator";
 import MicroChallenge from "./components/MicroChallenge";
+import WeatherCard from "./components/WeatherCard";
 
 export default function Home() {
   const [showTools, setShowTools] = useState(false);
@@ -119,6 +120,7 @@ export default function Home() {
               <ComplimentGenerator />
 
               <FakeTerminal />
+              <WeatherCard />
             </motion.div>
           </MainContent>
         </div>

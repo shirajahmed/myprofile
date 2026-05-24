@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { getWeatherDescription } from "../utils/weatherUtils";
+import { getWeatherDescription, getWeatherGif } from "../utils/weatherUtils";
 
 async function fetchWeatherData(lat, lon) {
   const res = await fetch(
@@ -89,7 +89,7 @@ export default function WeatherCard() {
               </p>
             </div>
             <Image
-              src={`/${weather.weather_code[0]}.gif`}
+              src={`/${getWeatherGif(weather.weather_code[0])}.gif`}
               alt="weather"
               width={70}
               height={70}
@@ -110,7 +110,7 @@ export default function WeatherCard() {
                   })}
                 </p>
                 <Image
-                  src={`/${weather.weather_code[i + 1]}.gif`}
+                  src={`/${getWeatherGif(weather.weather_code[i + 1])}.gif`}
                   alt="weather"
                   width={36}
                   height={36}

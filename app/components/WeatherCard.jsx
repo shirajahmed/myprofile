@@ -5,7 +5,7 @@ import { getWeatherDescription } from "../utils/weatherUtils";
 
 async function fetchWeatherData(lat, lon) {
   const res = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&past_days=3`
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&past_days=3`
   );
   if (!res.ok) throw new Error("Failed to fetch weather");
   return res.json();
@@ -32,7 +32,7 @@ export default function WeatherCard() {
           ]);
           const addr = geoRes.address;
           setLocation(
-            `${addr?.town || addr?.city || "NA"}, ${addr?.country || "NA"}`
+            `${addr?.city || addr?.town || addr?.city_district || addr?.county || addr?.state_district || addr?.suburb || "NA"}, ${addr?.country || "NA"}`
           );
           setWeather(weatherData.daily);
         } catch {
@@ -82,14 +82,14 @@ export default function WeatherCard() {
                 })}
               </p>
               <p className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-1">
-                {getWeatherDescription(weather.weathercode[0])}
+                {getWeatherDescription(weather.weather_code[0])}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 {weather.temperature_2m_min[0]}°C – {weather.temperature_2m_max[0]}°C
               </p>
             </div>
             <Image
-              src={`/${weather.weathercode[0]}.gif`}
+              src={`/${weather.weather_code[0]}.gif`}
               alt="weather"
               width={70}
               height={70}
@@ -110,7 +110,7 @@ export default function WeatherCard() {
                   })}
                 </p>
                 <Image
-                  src={`/${weather.weathercode[i + 1]}.gif`}
+                  src={`/${weather.weather_code[i + 1]}.gif`}
                   alt="weather"
                   width={36}
                   height={36}

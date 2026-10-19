@@ -50,6 +50,11 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/test",
+        destination: "/trest",
+        permanent: false,
+      },
     ];
   },
 

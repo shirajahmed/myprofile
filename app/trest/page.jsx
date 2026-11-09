@@ -122,6 +122,7 @@ export default function TrestPage() {
               <div
                 className="cliprame-embed w-full"
                 data-video="9q4wRmqY7ZFdti3P"
+                data-heatmap="on"
               ></div>
             </div>
           </motion.div>
@@ -224,7 +225,7 @@ export default function TrestPage() {
                 invoking the global scan dispatcher to instantiate responsive aspect ratios:
               </p>
               <div className="bg-gray-900 text-purple-300 font-mono text-xs sm:text-sm p-4 rounded-lg overflow-x-auto border border-purple-500/20">
-                <code>{`<div class="cliprame-embed" data-video="9q4wRmqY7ZFdti3P"></div>\n<script src="https://www.cliprame.com/embed.js" async></script>`}</code>
+                <code>{`<div class="cliprame-embed" data-video="9q4wRmqY7ZFdti3P" data-heatmap="on"></div>\n<script src="https://www.cliprame.com/embed.js" async></script>`}</code>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
                 {["Next.js 16", "Client Hydration", "Cliprame SDK", "Framer Motion", "Tailwind CSS"].map((tag, idx) => (
